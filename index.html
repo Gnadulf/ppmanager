@@ -1,0 +1,2054 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Property Manager">
+    <title>Property Management System</title>
+    <style>
+        /* Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        :root {
+            --primary: #007aff;
+            --primary-dark: #0051d5;
+            --danger: #ff3b30;
+            --warning: #ff9500;
+            --success: #34c759;
+            --gray-light: #f5f5f7;
+            --gray-medium: #8e8e93;
+            --gray-dark: #1d1d1f;
+            --shadow-light: 0 2px 8px rgba(0,0,0,0.05);
+            --shadow-medium: 0 4px 12px rgba(0,0,0,0.1);
+            --shadow-heavy: 0 10px 30px rgba(0,0,0,0.15);
+            --radius: 12px;
+            --radius-small: 8px;
+            --radius-pill: 25px;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--gray-light);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            color: var(--gray-dark);
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        /* Header */
+        .app-header {
+            background: white;
+            border-bottom: 1px solid #e5e5e7;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 15px 20px;
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        h1 {
+            font-size: 2em;
+            font-weight: 700;
+            color: var(--gray-dark);
+        }
+        
+        /* Navigation Tabs */
+        .view-tabs {
+            display: flex;
+            gap: 10px;
+            background: var(--gray-light);
+            padding: 4px;
+            border-radius: 10px;
+        }
+        
+        .view-tab {
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            background: transparent;
+            border: none;
+            white-space: nowrap;
+        }
+        
+        .view-tab:hover {
+            background: rgba(0,0,0,0.05);
+        }
+        
+        .view-tab.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: var(--shadow-light);
+        }
+        
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: calc(100vh - 100px);
+        }
+        
+        /* Stats Cards */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: var(--radius);
+            text-align: center;
+            box-shadow: var(--shadow-light);
+            transition: transform 0.2s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+        
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 13px;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            padding: 15px;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-light);
+        }
+        
+        .filter-btn {
+            background: var(--gray-light);
+            color: #666;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            border: none;
+        }
+        
+        .filter-btn:hover {
+            background: #e8e8ed;
+            transform: translateY(-1px);
+        }
+        
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* Task List */
+        .task-list {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .task-item {
+            background: white;
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-light);
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 15px;
+            align-items: start;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .task-item:hover {
+            box-shadow: var(--shadow-medium);
+            transform: translateY(-2px);
+        }
+        
+        .task-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--gray-medium);
+            transition: background 0.3s;
+        }
+        
+        .task-item.priority-hoch::before {
+            background: var(--danger);
+        }
+        
+        .task-item.priority-mittel::before {
+            background: var(--warning);
+        }
+        
+        .task-item.priority-niedrig::before {
+            background: var(--success);
+        }
+        
+        .task-checkbox {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            margin-top: 3px;
+        }
+        
+        .task-content {
+            flex: 1;
+        }
+        
+        .task-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .task-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--gray-dark);
+        }
+        
+        .building-badge {
+            background: var(--primary);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .task-meta {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+            color: #666;
+            flex-wrap: wrap;
+        }
+        
+        .priority-badge {
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .priority-hoch {
+            background: #ffebea;
+            color: var(--danger);
+        }
+        
+        .priority-mittel {
+            background: #fff3cd;
+            color: var(--warning);
+        }
+        
+        .priority-niedrig {
+            background: #d1f2d9;
+            color: var(--success);
+        }
+        
+        .completed {
+            opacity: 0.6;
+        }
+        
+        .completed .task-title {
+            text-decoration: line-through;
+        }
+        
+        /* Kanban Board */
+        .kanban-board {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .kanban-column {
+            background: var(--gray-light);
+            border-radius: var(--radius);
+            padding: 15px;
+            min-height: 500px;
+        }
+        
+        .kanban-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+        }
+        
+        .kanban-title {
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--gray-dark);
+        }
+        
+        .kanban-count {
+            background: var(--primary);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .kanban-tasks {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-height: 100px;
+        }
+        
+        .kanban-task {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: var(--shadow-light);
+            cursor: move;
+            transition: all 0.2s;
+        }
+        
+        .kanban-task:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+        
+        .kanban-task.dragging {
+            opacity: 0.5;
+            transform: rotate(5deg);
+        }
+        
+        /* Projects */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        
+        .project-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow-light);
+            transition: all 0.3s;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+        
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+        
+        .project-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--gray-dark);
+        }
+        
+        .project-status {
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .status-planning {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .status-active {
+            background: #fff3cd;
+            color: var(--warning);
+        }
+        
+        .status-completed {
+            background: #d4edda;
+            color: var(--success);
+        }
+        
+        .project-timeline {
+            margin: 15px 0;
+            padding: 15px;
+            background: var(--gray-light);
+            border-radius: var(--radius-small);
+        }
+        
+        .milestone {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .milestone:last-child {
+            margin-bottom: 0;
+        }
+        
+        .milestone-status {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .milestone-status:hover {
+            transform: scale(1.1);
+        }
+        
+        .milestone-status.done {
+            background: var(--success);
+        }
+        
+        .milestone-date {
+            font-weight: 600;
+            color: #666;
+            min-width: 80px;
+        }
+        
+        .milestone-text {
+            flex: 1;
+        }
+        
+        /* Contractors */
+        .contractor-list {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .contractor-card {
+            background: white;
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-light);
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 15px;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        
+        .contractor-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+        
+        .contractor-info h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: var(--gray-dark);
+        }
+        
+        .contractor-details {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .contractor-services {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .service-tag {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        /* Budget */
+        .budget-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .budget-card {
+            background: white;
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-light);
+            transition: all 0.3s;
+        }
+        
+        .budget-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+        
+        .budget-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .budget-header h3 {
+            font-size: 18px;
+            color: var(--gray-dark);
+        }
+        
+        .budget-amount {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .budget-progress {
+            height: 8px;
+            background: var(--gray-light);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .budget-fill {
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+        
+        /* Documents */
+        .doc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .doc-item {
+            background: white;
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-light);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .doc-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+        
+        .doc-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        
+        .doc-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray-dark);
+            margin-bottom: 5px;
+        }
+        
+        .doc-date {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        /* Forms & Modals */
+        .form-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .form-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 600px;
+            margin: 20px auto;
+            box-shadow: var(--shadow-heavy);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .form-header h2 {
+            font-size: 24px;
+            color: var(--gray-dark);
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            padding: 5px;
+            transition: color 0.2s;
+        }
+        
+        .close-btn:hover {
+            color: var(--gray-dark);
+        }
+        
+        .form-grid {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        label {
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        input,
+        select,
+        textarea {
+            padding: 12px;
+            border: 1px solid #d1d1d6;
+            border-radius: 10px;
+            font-size: 16px;
+            background: white;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0,122,255,0.1);
+        }
+        
+        /* Buttons */
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-family: inherit;
+        }
+        
+        button:hover:not(:disabled) {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-light);
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .secondary-btn {
+            background: var(--gray-medium);
+        }
+        
+        .secondary-btn:hover:not(:disabled) {
+            background: #636366;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .button-group button {
+            flex: 1;
+        }
+        
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: var(--shadow-medium);
+            transition: all 0.3s;
+            border: none;
+            z-index: 99;
+        }
+        
+        .fab:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-heavy);
+        }
+        
+        .fab-menu {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            display: none;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 98;
+        }
+        
+        .fab-menu.show {
+            display: flex;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fab-option {
+            background: white;
+            padding: 12px 20px;
+            border-radius: var(--radius-pill);
+            box-shadow: var(--shadow-medium);
+            cursor: pointer;
+            font-size: 14px;
+            white-space: nowrap;
+            transition: all 0.2s;
+            color: var(--gray-dark);
+        }
+        
+        .fab-option:hover {
+            transform: translateX(-5px);
+            box-shadow: var(--shadow-heavy);
+        }
+        
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(52,199,89,0.3);
+            transform: translateX(400px);
+            transition: transform 0.3s;
+            z-index: 1001;
+            max-width: 300px;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.error {
+            background: var(--danger);
+            box-shadow: 0 10px 30px rgba(255,59,48,0.3);
+        }
+        
+        /* Loading State */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px;
+            color: #666;
+        }
+        
+        .spinner {
+            border: 3px solid var(--gray-light);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        
+        .empty-state-text {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        /* Wiki Styles */
+        .wiki-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 20px;
+            height: calc(100vh - 200px);
+        }
+        
+        .wiki-sidebar {
+            background: white;
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow-light);
+            overflow-y: auto;
+        }
+        
+        .wiki-sidebar h3 {
+            margin-bottom: 15px;
+            color: var(--gray-dark);
+        }
+        
+        .wiki-filter-section {
+            background: var(--gray-light);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .wiki-filter-section h4 {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .wiki-user-type {
+            display: flex;
+            gap: 8px;
+            flex-direction: column;
+        }
+        
+        .wiki-type-btn {
+            background: white;
+            border: 2px solid #e0e0e0;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            color: var(--gray-dark);
+            text-align: left;
+        }
+        
+        .wiki-type-btn:hover {
+            background: #f8f8f8;
+            border-color: var(--primary);
+        }
+        
+        .wiki-type-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .wiki-categories {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .wiki-category {
+            background: var(--gray-light);
+            border: none;
+            padding: 12px 16px;
+            border-radius: 8px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            color: var(--gray-dark);
+        }
+        
+        .wiki-category:hover {
+            background: #e8e8ed;
+            transform: translateX(5px);
+        }
+        
+        .wiki-category.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .wiki-category.hidden {
+            display: none;
+        }
+        
+        .wiki-content {
+            background: white;
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow-light);
+            overflow-y: auto;
+        }
+        
+        .wiki-section {
+            margin-bottom: 30px;
+        }
+        
+        .wiki-section h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--gray-light);
+        }
+        
+        .wiki-section h3 {
+            color: var(--gray-dark);
+            margin: 20px 0 15px 0;
+        }
+        
+        .wiki-item {
+            background: var(--gray-light);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .wiki-item.vermieter-only,
+        .wiki-item.eigennutzer-only {
+            position: relative;
+        }
+        
+        .wiki-item.vermieter-only::before {
+            content: '🏢 Nur Vermieter';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .wiki-item.eigennutzer-only::before {
+            content: '🏡 Nur Eigennutzer';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #e8f5e9;
+            color: #388e3c;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .wiki-item.hidden {
+            display: none;
+        }
+        
+        .wiki-item-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .wiki-item-title {
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--gray-dark);
+        }
+        
+        .wiki-frequency {
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .wiki-details {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #666;
+        }
+        
+        .wiki-warning {
+            background: #fff3cd;
+            border-left: 4px solid var(--warning);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .wiki-info {
+            background: #e3f2fd;
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .wiki-checklist {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .wiki-checklist li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        
+        .wiki-checklist li:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            h1 {
+                font-size: 1.5em;
+                text-align: center;
+            }
+            
+            .view-tabs {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .kanban-board {
+                grid-template-columns: 1fr;
+            }
+            
+            .project-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .fab {
+                bottom: 20px;
+                right: 20px;
+                width: 56px;
+                height: 56px;
+            }
+            
+            .task-item {
+                grid-template-columns: auto 1fr;
+            }
+            
+            .task-item > div:last-child {
+                grid-column: 1 / -1;
+                margin-top: 10px;
+            }
+            
+            .wiki-container {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+            
+            .wiki-sidebar {
+                position: sticky;
+                top: 80px;
+                z-index: 10;
+                margin-bottom: 20px;
+            }
+            
+            .wiki-categories {
+                flex-direction: row;
+                overflow-x: auto;
+                gap: 10px;
+                padding-bottom: 10px;
+            }
+            
+            .wiki-category {
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+        }
+        
+        /* Print Styles */
+        @media print {
+            .app-header,
+            .fab,
+            .fab-menu,
+            .filters,
+            button {
+                display: none !important;
+            }
+            
+            body {
+                background: white;
+            }
+            
+            .container {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-header">
+        <div class="header-content">
+            <h1>🏢 Property & Project Manager</h1>
+            <div class="view-tabs">
+                <button class="view-tab active" data-view="tasks">Aufgaben</button>
+                <button class="view-tab" data-view="kanban">Kanban</button>
+                <button class="view-tab" data-view="projects">Projekte</button>
+                <button class="view-tab" data-view="contractors">Dienstleister</button>
+                <button class="view-tab" data-view="budget">Budget</button>
+                <button class="view-tab" data-view="docs">Dokumente</button>
+                <button class="view-tab" data-view="wiki">Wiki</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <!-- Tasks View -->
+        <div id="tasksView" class="view-content">
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalTasks">0</div>
+                    <div class="stat-label">Gesamt</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="openTasks">0</div>
+                    <div class="stat-label">Offen</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="todayTasks">0</div>
+                    <div class="stat-label">Heute</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="projectCount">0</div>
+                    <div class="stat-label">Projekte</div>
+                </div>
+            </div>
+            
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">Alle</button>
+                <button class="filter-btn" data-filter="open">Offen</button>
+                <button class="filter-btn" data-filter="today">Heute</button>
+                <button class="filter-btn" data-filter="week">Diese Woche</button>
+                <button class="filter-btn" data-filter="high">Hohe Priorität</button>
+            </div>
+            
+            <div class="task-list" id="taskList"></div>
+        </div>
+        
+        <!-- Kanban View -->
+        <div id="kanbanView" class="view-content" style="display: none;">
+            <div class="kanban-board" id="kanbanBoard"></div>
+        </div>
+        
+        <!-- Projects View -->
+        <div id="projectsView" class="view-content" style="display: none;">
+            <div class="project-grid" id="projectGrid"></div>
+        </div>
+        
+        <!-- Contractors View -->
+        <div id="contractorsView" class="view-content" style="display: none;">
+            <div class="contractor-list" id="contractorList"></div>
+        </div>
+        
+        <!-- Budget View -->
+        <div id="budgetView" class="view-content" style="display: none;">
+            <div class="budget-overview" id="budgetOverview"></div>
+        </div>
+        
+        <!-- Documents View -->
+        <div id="docsView" class="view-content" style="display: none;">
+            <div class="doc-grid" id="docGrid"></div>
+        </div>
+        
+        <!-- Wiki View -->
+        <div id="wikiView" class="view-content" style="display: none;">
+            <div class="wiki-container">
+                <div class="wiki-sidebar">
+                    <div class="wiki-filter-section">
+                        <h4>Ich bin:</h4>
+                        <div class="wiki-user-type">
+                            <button class="wiki-type-btn active" data-type="all">🏠 Beides</button>
+                            <button class="wiki-type-btn" data-type="vermieter">🏢 Vermieter</button>
+                            <button class="wiki-type-btn" data-type="eigennutzer">🏡 Eigennutzer</button>
+                        </div>
+                    </div>
+                    <h3>Kategorien</h3>
+                    <div class="wiki-categories">
+                        <button class="wiki-category active" data-category="verkehrssicherung">🚧 Verkehrssicherung</button>
+                        <button class="wiki-category" data-category="brandschutz">🔥 Brandschutz</button>
+                        <button class="wiki-category" data-category="hygiene">🧹 Hygiene & Gesundheit</button>
+                        <button class="wiki-category" data-category="energie">⚡ Energie & Umwelt</button>
+                        <button class="wiki-category" data-category="dokumentation">📋 Dokumentation</button>
+                        <button class="wiki-category" data-category="vermietung" data-vermieter-only="true">🏠 Vermietung</button>
+                        <button class="wiki-category" data-category="checkliste">✅ Checklisten</button>
+                    </div>
+                </div>
+                <div class="wiki-content" id="wikiContent">
+                    <!-- Wiki content will be rendered here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Floating Action Button -->
+    <button class="fab" id="fabButton">+</button>
+    <div class="fab-menu" id="fabMenu">
+        <div class="fab-option" data-action="task">📋 Neue Aufgabe</div>
+        <div class="fab-option" data-action="project">🏗️ Neues Projekt</div>
+        <div class="fab-option" data-action="contractor">👷 Dienstleister hinzufügen</div>
+        <div class="fab-option" data-action="doc">📄 Dokument hochladen</div>
+        <div class="fab-option" data-action="export">💾 Daten exportieren</div>
+    </div>
+    
+    <!-- Task Modal -->
+    <div class="form-modal" id="taskModal">
+        <div class="form-content">
+            <div class="form-header">
+                <h2>Neue Aufgabe</h2>
+                <button class="close-btn" data-modal="taskModal">&times;</button>
+            </div>
+            <form id="taskForm" class="form-grid">
+                <div class="form-group">
+                    <label for="taskTitle">Titel *</label>
+                    <input type="text" id="taskTitle" required placeholder="z.B. Treppenhaus reinigen">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="taskBuilding">Gebäude *</label>
+                        <select id="taskBuilding" required>
+                            <option value="">Gebäude wählen</option>
+                            <option value="KDW17">KDW17</option>
+                            <option value="KDW11">KDW11</option>
+                            <option value="EC450">EC450</option>
+                            <option value="EC362">EC362</option>
+                            <option value="S28">S28</option>
+                            <option value="TH">TH</option>
+                            <option value="Schwimmbad">Schwimmbad</option>
+                            <option value="Zentrale">Zentrale</option>
+                            <option value="Gästewohnung">Gästewohnung</option>
+                            <option value="Schmalenbecker Str">Schmalenbecker Str</option>
+                            <option value="Felbrunnenstr">Felbrunnenstr.</option>
+                            <option value="HIS">HIS</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="taskPriority">Priorität *</label>
+                        <select id="taskPriority" required>
+                            <option value="">Priorität wählen</option>
+                            <option value="hoch">Hoch</option>
+                            <option value="mittel">Mittel</option>
+                            <option value="niedrig">Niedrig</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="taskDeadline">Fälligkeit *</label>
+                        <input type="date" id="taskDeadline" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="taskRecurrence">Wiederholung</label>
+                        <select id="taskRecurrence">
+                            <option value="">Keine</option>
+                            <option value="daily">Täglich</option>
+                            <option value="weekly">Wöchentlich</option>
+                            <option value="8weeks">8-Wöchentlich</option>
+                            <option value="16weeks">16-Wöchentlich</option>
+                            <option value="yearly">Jährlich</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="taskContractor">Dienstleister</label>
+                        <select id="taskContractor">
+                            <option value="">Kein Dienstleister</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="taskBudget">Budget (€)</label>
+                        <input type="number" id="taskBudget" placeholder="0.00" step="0.01" min="0">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="taskStakeholders">Stakeholder (E-Mails)</label>
+                    <input type="text" id="taskStakeholders" placeholder="email1@example.com, email2@example.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="taskDescription">Beschreibung</label>
+                    <textarea id="taskDescription" placeholder="Details zur Aufgabe..."></textarea>
+                </div>
+                
+                <div class="button-group">
+                    <button type="submit">Aufgabe erstellen</button>
+                    <button type="button" class="secondary-btn" data-modal="taskModal">Abbrechen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Project Modal -->
+    <div class="form-modal" id="projectModal">
+        <div class="form-content">
+            <div class="form-header">
+                <h2>Neues Projekt</h2>
+                <button class="close-btn" data-modal="projectModal">&times;</button>
+            </div>
+            <form id="projectForm" class="form-grid">
+                <div class="form-group">
+                    <label for="projectTitle">Projekttitel *</label>
+                    <input type="text" id="projectTitle" required placeholder="z.B. Heizungsaustausch KDW17">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="projectBuilding">Gebäude *</label>
+                        <select id="projectBuilding" required>
+                            <option value="">Gebäude wählen</option>
+                            <option value="KDW17">KDW17</option>
+                            <option value="KDW11">KDW11</option>
+                            <option value="EC450">EC450</option>
+                            <option value="EC362">EC362</option>
+                            <option value="S28">S28</option>
+                            <option value="TH">TH</option>
+                            <option value="Schwimmbad">Schwimmbad</option>
+                            <option value="Zentrale">Zentrale</option>
+                            <option value="Gästewohnung">Gästewohnung</option>
+                            <option value="Schmalenbecker Str">Schmalenbecker Str</option>
+                            <option value="Felbrunnenstr">Felbrunnenstr.</option>
+                            <option value="HIS">HIS</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="projectStatus">Status *</label>
+                        <select id="projectStatus" required>
+                            <option value="planning">Planung</option>
+                            <option value="active">Aktiv</option>
+                            <option value="completed">Abgeschlossen</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="projectStart">Startdatum *</label>
+                        <input type="date" id="projectStart" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="projectEnd">Enddatum *</label>
+                        <input type="date" id="projectEnd" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="projectBudget">Budget (€) *</label>
+                    <input type="number" id="projectBudget" required placeholder="0.00" step="0.01" min="0">
+                </div>
+                
+                <div class="form-group">
+                    <label for="projectMilestones">Meilensteine (einer pro Zeile)</label>
+                    <textarea id="projectMilestones" placeholder="01.02.2025 - Demontage alte Heizung&#10;05.02.2025 - Installation neue Heizung&#10;10.02.2025 - Inbetriebnahme" rows="5"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="projectDescription">Beschreibung</label>
+                    <textarea id="projectDescription" placeholder="Projektdetails..."></textarea>
+                </div>
+                
+                <div class="button-group">
+                    <button type="submit">Projekt erstellen</button>
+                    <button type="button" class="secondary-btn" data-modal="projectModal">Abbrechen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Contractor Modal -->
+    <div class="form-modal" id="contractorModal">
+        <div class="form-content">
+            <div class="form-header">
+                <h2>Dienstleister hinzufügen</h2>
+                <button class="close-btn" data-modal="contractorModal">&times;</button>
+            </div>
+            <form id="contractorForm" class="form-grid">
+                <div class="form-group">
+                    <label for="contractorName">Firmenname *</label>
+                    <input type="text" id="contractorName" required placeholder="z.B. Malermeister Schmidt GmbH">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="contractorContact">Ansprechpartner</label>
+                        <input type="text" id="contractorContact" placeholder="Max Mustermann">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contractorPhone">Telefon *</label>
+                        <input type="tel" id="contractorPhone" required placeholder="+49 123 456789">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contractorEmail">E-Mail</label>
+                    <input type="email" id="contractorEmail" placeholder="info@firma.de">
+                </div>
+                
+                <div class="form-group">
+                    <label for="contractorServices">Leistungen (kommagetrennt) *</label>
+                    <input type="text" id="contractorServices" required placeholder="Malerarbeiten, Tapezieren, Fassade">
+                </div>
+                
+                <div class="form-group">
+                    <label for="contractorNotes">Notizen</label>
+                    <textarea id="contractorNotes" placeholder="Bewertung, Preise, Verfügbarkeit..."></textarea>
+                </div>
+                
+                <div class="button-group">
+                    <button type="submit">Dienstleister speichern</button>
+                    <button type="button" class="secondary-btn" data-modal="contractorModal">Abbrechen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div class="notification" id="notification"></div>
+    
+    <script>
+        // App State Management
+        class PropertyManager {
+            constructor() {
+                this.state = {
+                    tasks: [],
+                    projects: [],
+                    contractors: [],
+                    documents: [],
+                    currentView: 'tasks',
+                    currentFilter: 'all'
+                };
+                
+                // Make instance globally available
+                window.app = this;
+                
+                this.init();
+            }
+            
+            init() {
+                try {
+                    // Load data from localStorage
+                    this.loadData();
+                    
+                    // Setup event listeners
+                    this.setupEventListeners();
+                    
+                    // Initial render
+                    this.render();
+                    
+                    // Set default date
+                    const today = new Date().toISOString().split('T')[0];
+                    const dateInputs = document.querySelectorAll('input[type="date"]');
+                    dateInputs.forEach(input => {
+                        if (input.id === 'taskDeadline' || input.id === 'projectStart') {
+                            input.value = today;
+                        }
+                    });
+                    
+                } catch (error) {
+                    console.error('Initialization error:', error);
+                    this.showNotification('Fehler beim Laden der App', 'error');
+                }
+            }
+            
+            loadData() {
+                try {
+                    this.state.tasks = JSON.parse(localStorage.getItem('propertyTasks') || '[]');
+                    this.state.projects = JSON.parse(localStorage.getItem('propertyProjects') || '[]');
+                    this.state.contractors = JSON.parse(localStorage.getItem('propertyContractors') || '[]');
+                    this.state.documents = JSON.parse(localStorage.getItem('propertyDocuments') || '[]');
+                } catch (error) {
+                    console.error('Error loading data:', error);
+                    this.showNotification('Fehler beim Laden der Daten', 'error');
+                }
+            }
+            
+            saveData() {
+                try {
+                    localStorage.setItem('propertyTasks', JSON.stringify(this.state.tasks));
+                    localStorage.setItem('propertyProjects', JSON.stringify(this.state.projects));
+                    localStorage.setItem('propertyContractors', JSON.stringify(this.state.contractors));
+                    localStorage.setItem('propertyDocuments', JSON.stringify(this.state.documents));
+                } catch (error) {
+                    console.error('Error saving data:', error);
+                    this.showNotification('Fehler beim Speichern der Daten', 'error');
+                }
+            }
+            
+            setupEventListeners() {
+                // View tabs
+                document.querySelectorAll('.view-tab').forEach(tab => {
+                    tab.addEventListener('click', (e) => this.switchView(e.target.dataset.view));
+                });
+                
+                // Filters
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => this.setFilter(e.target.dataset.filter));
+                });
+                
+                // FAB
+                document.getElementById('fabButton').addEventListener('click', () => this.toggleFabMenu());
+                
+                // FAB options
+                document.querySelectorAll('.fab-option').forEach(option => {
+                    option.addEventListener('click', (e) => this.handleFabOption(e.target.dataset.action));
+                });
+                
+                // Forms
+                document.getElementById('taskForm').addEventListener('submit', (e) => this.handleTaskSubmit(e));
+                document.getElementById('projectForm').addEventListener('submit', (e) => this.handleProjectSubmit(e));
+                document.getElementById('contractorForm').addEventListener('submit', (e) => this.handleContractorSubmit(e));
+                
+                // Modal close buttons
+                document.querySelectorAll('.close-btn, .secondary-btn[data-modal]').forEach(btn => {
+                    btn.addEventListener('click', (e) => this.closeModal(e.target.dataset.modal));
+                });
+                
+                // Click outside modal to close
+                document.querySelectorAll('.form-modal').forEach(modal => {
+                    modal.addEventListener('click', (e) => {
+                        if (e.target === modal) {
+                            modal.style.display = 'none';
+                        }
+                    });
+                });
+                
+                // Wiki categories and type filter - setup after DOM is ready
+                setTimeout(() => {
+                    document.querySelectorAll('.wiki-category').forEach(btn => {
+                        btn.addEventListener('click', (e) => this.showWikiCategory(e.target.dataset.category));
+                    });
+                    
+                    document.querySelectorAll('.wiki-type-btn').forEach(btn => {
+                        btn.addEventListener('click', (e) => this.setWikiUserType(e.target.dataset.type));
+                    });
+                }, 100);
+            }
+            
+            switchView(view) {
+                if (!view) return;
+                
+                this.state.currentView = view;
+                
+                // Update tabs
+                document.querySelectorAll('.view-tab').forEach(tab => {
+                    tab.classList.toggle('active', tab.dataset.view === view);
+                });
+                
+                // Hide all views
+                document.querySelectorAll('.view-content').forEach(content => {
+                    content.style.display = 'none';
+                });
+                
+                // Show selected view
+                const viewElement = document.getElementById(`${view}View`);
+                if (viewElement) {
+                    viewElement.style.display = 'block';
+                }
+                
+                this.render();
+            }
+            
+            setFilter(filter) {
+                this.state.currentFilter = filter;
+                
+                // Update filter buttons
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.filter === filter);
+                });
+                
+                this.renderTasks();
+            }
+            
+            render() {
+                try {
+                    this.updateStats();
+                    
+                    switch(this.state.currentView) {
+                        case 'tasks':
+                            this.renderTasks();
+                            break;
+                        case 'kanban':
+                            this.renderKanban();
+                            break;
+                        case 'projects':
+                            this.renderProjects();
+                            break;
+                        case 'contractors':
+                            this.renderContractors();
+                            break;
+                        case 'budget':
+                            this.renderBudget();
+                            break;
+                        case 'docs':
+                            this.renderDocuments();
+                            break;
+                        case 'wiki':
+                            this.renderWiki();
+                            break;
+                    }
+                } catch (error) {
+                    console.error('Render error:', error);
+                    this.showNotification('Fehler beim Anzeigen der Daten', 'error');
+                }
+            }
+            
+            updateStats() {
+                const today = new Date().toISOString().split('T')[0];
+                const openTasks = this.state.tasks.filter(t => !t.completed);
+                const todayTasks = openTasks.filter(t => t.deadline === today);
+                const activeProjects = this.state.projects.filter(p => p.status !== 'completed');
+                
+                document.getElementById('totalTasks').textContent = this.state.tasks.length;
+                document.getElementById('openTasks').textContent = openTasks.length;
+                document.getElementById('todayTasks').textContent = todayTasks.length;
+                document.getElementById('projectCount').textContent = activeProjects.length;
+            }
+            
+            renderTasks() {
+                const taskList = document.getElementById('taskList');
+                const filteredTasks = this.filterTasks();
+                
+                if (filteredTasks.length === 0) {
+                    taskList.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📋</div>
+                            <div class="empty-state-text">Keine Aufgaben gefunden</div>
+                            <button onclick="app.openModal('taskModal')">Erste Aufgabe erstellen</button>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                taskList.innerHTML = filteredTasks.map(task => this.renderTaskItem(task)).join('');
+            }
+            
+            renderTaskItem(task) {
+                const contractor = this.state.contractors.find(c => c.id == task.contractor);
+                
+                return `
+                    <div class="task-item ${task.completed ? 'completed' : ''} priority-${task.priority}">
+                        <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} 
+                               onchange="app.toggleTask(${task.id})">
+                        <div class="task-content">
+                            <div class="task-header">
+                                <div class="task-title">${this.escapeHtml(task.title)}</div>
+                                <div class="building-badge">${this.escapeHtml(task.building)}</div>
+                                ${contractor ? `<div class="service-tag">👷 ${this.escapeHtml(contractor.name)}</div>` : ''}
+                            </div>
+                            ${task.description ? `<div class="task-description">${this.escapeHtml(task.description)}</div>` : ''}
+                            <div class="task-meta">
+                                <div>📅 ${this.formatDate(task.deadline)}</div>
+                                ${task.budget > 0 ? `<div>💰 ${task.budget.toFixed(2)}€</div>` : ''}
+                                ${task.recurrence ? `<div>🔄 ${this.getRecurrenceText(task.recurrence)}</div>` : ''}
+                                ${task.stakeholders?.length > 0 ? `<div>👥 ${task.stakeholders.length}</div>` : ''}
+                            </div>
+                        </div>
+                        <div>
+                            <span class="priority-badge priority-${task.priority}">${task.priority}</span>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            filterTasks() {
+                let filtered = [...this.state.tasks];
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                switch(this.state.currentFilter) {
+                    case 'open':
+                        filtered = filtered.filter(t => !t.completed);
+                        break;
+                    case 'today':
+                        filtered = filtered.filter(t => {
+                            const taskDate = new Date(t.deadline);
+                            taskDate.setHours(0, 0, 0, 0);
+                            return taskDate.getTime() === today.getTime();
+                        });
+                        break;
+                    case 'week':
+                        const weekEnd = new Date(today);
+                        weekEnd.setDate(weekEnd.getDate() + 7);
+                        filtered = filtered.filter(t => {
+                            const taskDate = new Date(t.deadline);
+                            return taskDate >= today && taskDate <= weekEnd;
+                        });
+                        break;
+                    case 'high':
+                        filtered = filtered.filter(t => t.priority === 'hoch');
+                        break;
+                }
+                
+                return filtered.sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
+            }
+            
+            renderKanban() {
+                const kanbanBoard = document.getElementById('kanbanBoard');
+                
+                const columns = {
+                    todo: { title: '📋 Zu erledigen', tasks: [] },
+                    progress: { title: '🔄 In Bearbeitung', tasks: [] },
+                    done: { title: '✅ Erledigt', tasks: [] }
+                };
+                
+                // Distribute tasks
+                this.state.tasks.forEach(task => {
+                    if (task.completed || task.status === 'done') {
+                        columns.done.tasks.push(task);
+                    } else if (task.status === 'progress') {
+                        columns.progress.tasks.push(task);
+                    } else {
+                        columns.todo.tasks.push(task);
+                    }
+                });
+                
+                kanbanBoard.innerHTML = Object.entries(columns).map(([status, column]) => `
+                    <div class="kanban-column" data-status="${status}">
+                        <div class="kanban-header">
+                            <div class="kanban-title">${column.title}</div>
+                            <div class="kanban-count">${column.tasks.length}</div>
+                        </div>
+                        <div class="kanban-tasks" data-status="${status}">
+                            ${column.tasks.map(task => this.renderKanbanTask(task)).join('')}
+                        </div>
+                    </div>
+                `).join('');
+                
+                // Setup drag and drop
+                this.setupDragAndDrop();
+            }
+            
+            renderKanbanTask(task) {
+                return `
+                    <div class="kanban-task" draggable="true" data-task-id="${task.id}">
+                        <div style="font-weight: 600; margin-bottom: 5px;">${this.escapeHtml(task.title)}</div>
+                        <div style="font-size: 12px; color: #666;">
+                            ${this.escapeHtml(task.building)} • ${this.formatDate(task.deadline)}
+                        </div>
+                        <div style="margin-top: 8px;">
+                            <span class="priority-badge priority-${task.priority}">${task.priority}</span>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            setupDragAndDrop() {
+                const tasks = document.querySelectorAll('.kanban-task');
+                const columns = document.querySelectorAll('.kanban-tasks');
+                
+                tasks.forEach(task => {
+                    task.addEventListener('dragstart', (e) => {
+                        e.dataTransfer.setData('taskId', task.dataset.taskId);
+                        task.classList.add('dragging');
+                    });
+                    
+                    task.addEventListener('dragend', () => {
+                        task.classList.remove('dragging');
+                    });
+                });
+                
+                columns.forEach(column => {
+                    column.addEventListener('dragover', (e) => {
+                        e.preventDefault();
+                    });
+                    
+                    column.addEventListener('drop', (e) => {
+                        e.preventDefault();
+                        const taskId = parseInt(e.dataTransfer.getData('taskId'));
+                        const newStatus = column.dataset.status;
+                        
+                        const task = this.state.tasks.find(t => t.id === taskId);
+                        if (task) {
+                            task.status = newStatus;
+                            task.completed = newStatus === 'done';
+                            this.saveData();
+                            this.render();
+                        }
+                    });
+                });
+            }
+            
+            renderProjects() {
+                const projectGrid = document.getElementById('projectGrid');
+                
+                if (this.state.projects.length === 0) {
+                    projectGrid.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">🏗️</div>
+                            <div class="empty-state-text">Keine Projekte vorhanden</div>
+                            <button onclick="app.openModal('projectModal')">Erstes Projekt erstellen</button>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                projectGrid.innerHTML = this.state.projects.map(project => this.renderProjectCard(project)).join('');
+            }
+            
+            renderProjectCard(project) {
+                const progress = this.calculateProjectProgress(project);
+                
+                return `
+                    <div class="project-card">
+                        <div class="project-header">
+                            <div>
+                                <div class="project-title">${this.escapeHtml(project.title)}</div>
+                                <div style="font-size: 14px; color: #666; margin-top: 5px;">
+                                    ${this.escapeHtml(project.building)}
+                                </div>
+                            </div>
+                            <div class="project-status status-${project.status}">${this.getStatusText(project.status)}</div>
+                        </div>
+                        
+                        <div style="margin: 15px 0;">
+                            <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 5px;">
+                                <span>Budget: ${project.budget.toFixed(2)}€</span>
+                                <span>${progress}% fertig</span>
+                            </div>
+                            <div class="budget-progress">
+                                <div class="budget-fill" style="width: ${progress}%"></div>
+                            </div>
+                        </div>
+                        
+                        ${project.milestones && project.milestones.length > 0 ? `
+                            <div class="project-timeline">
+                                <div style="font-weight: 600; margin-bottom: 10px;">Meilensteine</div>
+                                ${project.milestones.map((m, i) => `
+                                    <div class="milestone">
+                                        <div class="milestone-status ${m.done ? 'done' : ''}" 
+                                             onclick="app.toggleMilestone(${project.id}, ${i})"></div>
+                                        <div class="milestone-date">${this.formatDate(m.date)}</div>
+                                        <div class="milestone-text">${this.escapeHtml(m.text)}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                        
+                        <div style="display: flex; gap: 10px; margin-top: 15px;">
+                            <button onclick="app.deleteProject(${project.id})" class="secondary-btn">Löschen</button>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            calculateProjectProgress(project) {
+                if (!project.milestones || project.milestones.length === 0) return 0;
+                const completed = project.milestones.filter(m => m.done).length;
+                return Math.round((completed / project.milestones.length) * 100);
+            }
+            
+            renderContractors() {
+                const contractorList = document.getElementById('contractorList');
+                
+                if (this.state.contractors.length === 0) {
+                    contractorList.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">👷</div>
+                            <div class="empty-state-text">Keine Dienstleister vorhanden</div>
+                            <button onclick="app.openModal('contractorModal')">Dienstleister hinzufügen</button>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                contractorList.innerHTML = this.state.contractors.map(contractor => `
+                    <div class="contractor-card">
+                        <div class="contractor-info">
+                            <h3>${this.escapeHtml(contractor.name)}</h3>
+                            <div class="contractor-details">
+                                ${contractor.contact ? `<div>👤 ${this.escapeHtml(contractor.contact)}</div>` : ''}
+                                <div>📞 ${this.escapeHtml(contractor.phone)}</div>
+                                ${contractor.email ? `<div>✉️ ${this.escapeHtml(contractor.email)}</div>` : ''}
+                            </div>
+                            <div class="contractor-services">
+                                ${contractor.services.map(s => `<span class="service-tag">${this.escapeHtml(s)}</span>`).join('')}
+                            </div>
+                            ${contractor.notes ? `<div style="margin-top: 10px; font-size: 14px; color: #666;">${this.escapeHtml(contractor.notes)}</div>` : ''}
+                        </div>
+                        <div>
+                            <button onclick="app.deleteContractor(${contractor.id})" class="secondary-btn">Löschen</button>
+                        </div>
+                    </div>
+                `).join('');
+                
+                this.updateContractorSelect();
+            }
+            
+            renderBudget() {
+                const budgetOverview = document.getElementById('budgetOverview');
+                const buildingBudgets = this.calculateBuildingBudgets();
+                
+                budgetOverview.innerHTML = Object.entries(buildingBudgets)
+                    .filter(([_, budget]) => budget.total > 0)
+                    .map(([building, budget]) => `
+                        <div class="budget-card">
+                            <div class="budget-header">
+                                <h3>${this.escapeHtml(building)}</h3>
+                                <div class="budget-amount">${budget.total.toFixed(2)}€</div>
+                            </div>
+                            <div style="margin-top: 15px; font-size: 14px; color: #666;">
+                                <div>Aufgaben: ${budget.tasks.toFixed(2)}€</div>
+                                <div>Projekte: ${budget.projects.toFixed(2)}€</div>
+                            </div>
+                            <div class="budget-progress">
+                                <div class="budget-fill" style="width: ${Math.min((budget.spent / budget.total) * 100, 100)}%"></div>
+                            </div>
+                        </div>
+                    `).join('');
+                
+                if (Object.keys(buildingBudgets).filter(b => buildingBudgets[b].total > 0).length === 0) {
+                    budgetOverview.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">💰</div>
+                            <div class="empty-state-text">Noch keine Budgets erfasst</div>
+                        </div>
+                    ;
+                }
+            }

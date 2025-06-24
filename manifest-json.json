@@ -1,0 +1,44 @@
+{
+  "name": "Property & Project Manager",
+  "short_name": "PropManager",
+  "description": "Verwaltung von Immobilien, Aufgaben und Projekten",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f5f7",
+  "theme_color": "#007aff",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity"],
+  "lang": "de-DE",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "Neue Aufgabe",
+      "short_name": "Aufgabe",
+      "description": "Neue Aufgabe erstellen",
+      "url": "/?action=new-task",
+      "icons": [{ "src": "icon-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Projekte",
+      "short_name": "Projekte",
+      "description": "Projekte anzeigen",
+      "url": "/?view=projects",
+      "icons": [{ "src": "icon-96.png", "sizes": "96x96" }]
+    }
+  ]
+}

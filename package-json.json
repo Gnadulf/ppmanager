@@ -1,0 +1,21 @@
+{
+  "name": "property-manager",
+  "version": "1.0.0",
+  "description": "Property Management System für Immobilienverwaltung",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "build": "echo 'No build needed for static site'",
+    "deploy": "npm run build"
+  },
+  "keywords": [
+    "property-management",
+    "real-estate",
+    "task-management",
+    "immobilienverwaltung"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {},
+  "dependencies": {}
+}
