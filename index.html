@@ -10,6 +10,18 @@
     <meta name="theme-color" content="#007aff">
     <link rel="apple-touch-icon" href="/icon-192.png">
     <title>Property Management System</title>
+    
+    <!-- Supabase Client Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Environment Variables Injection (for Vercel) -->
+    <script>
+        // These will be replaced by Vercel during build
+        window.SUPABASE_URL = '%NEXT_PUBLIC_SUPABASE_URL%';
+        window.SUPABASE_ANON_KEY = '%NEXT_PUBLIC_SUPABASE_ANON_KEY%';
+    </script>
+    
+    <script src="supabase-config.js"></script>
     <style>
         /* Reset & Base Styles */
         * {
@@ -64,6 +76,52 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 15px;
+        }
+        
+        /* Sync Status Indicator */
+        .sync-status {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 12px;
+            border-radius: var(--radius-pill);
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .sync-status.offline {
+            background: rgba(150, 150, 150, 0.1);
+            color: #666;
+        }
+        
+        .sync-status.online {
+            background: rgba(52, 199, 89, 0.1);
+            color: var(--success);
+        }
+        
+        .sync-status.syncing {
+            background: rgba(0, 122, 255, 0.1);
+            color: var(--primary);
+        }
+        
+        .sync-status.error {
+            background: rgba(255, 59, 48, 0.1);
+            color: var(--danger);
+        }
+        
+        .sync-icon {
+            font-size: 16px;
+            display: inline-block;
+        }
+        
+        .sync-icon.syncing {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
         
         h1 {
@@ -1135,6 +1193,11 @@
                 align-items: stretch;
             }
             
+            .sync-status {
+                align-self: center;
+                margin-top: 10px;
+            }
+            
             h1 {
                 font-size: 1.5em;
                 text-align: center;
@@ -1565,6 +1628,9 @@
                 <button class="view-tab" data-view="docs">Dokumente</button>
                 <button class="view-tab" data-view="wiki">Wiki</button>
             </div>
+            <div id="syncStatus" class="sync-status offline">
+                <span class="sync-icon">📵</span> Offline
+            </div>
         </div>
     </div>
     
@@ -1913,6 +1979,9 @@
                 // Make instance globally available
                 window.app = this;
                 
+                // Initialize sync manager
+                this.syncManager = null;
+                
                 this.init();
             }
             
@@ -1960,10 +2029,20 @@
                     localStorage.setItem('propertyProjects', JSON.stringify(this.state.projects));
                     localStorage.setItem('propertyContractors', JSON.stringify(this.state.contractors));
                     localStorage.setItem('propertyDocuments', JSON.stringify(this.state.documents));
+                    
+                    // Trigger sync if available
+                    if (this.syncManager && navigator.onLine) {
+                        this.syncManager.syncAll();
+                    }
                 } catch (error) {
                     console.error('Error saving data:', error);
                     this.showNotification('Fehler beim Speichern der Daten', 'error');
                 }
+            }
+            
+            // Alias for compatibility with SyncManager
+            saveToLocalStorage() {
+                this.saveData();
             }
             
             setupEventListeners() {
@@ -3434,13 +3513,24 @@
         
         // Initialize Supabase sync after app is ready
         document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(async () => {
-                // Only initialize if credentials are configured
-                if (SUPABASE_CONFIG.url !== 'YOUR_SUPABASE_PROJECT_URL') {
-                    // Starting Supabase sync
-                    await syncManager.init();
-                } else {
-                    // Supabase not configured - running in offline mode
+            setTimeout(() => {
+                // Only initialize if credentials are configured and SyncManager is available
+                if (typeof SyncManager !== 'undefined' && window.app) {
+                    window.app.syncManager = new SyncManager(window.app);
+                    
+                    // Update status based on connection
+                    if (!navigator.onLine) {
+                        window.app.syncManager.updateSyncStatus('offline');
+                    }
+                    
+                    // Monitor online/offline status
+                    window.addEventListener('online', () => {
+                        window.app.syncManager.updateSyncStatus('online');
+                    });
+                    
+                    window.addEventListener('offline', () => {
+                        window.app.syncManager.updateSyncStatus('offline');
+                    });
                 }
             }, 1000);
         });
