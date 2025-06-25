@@ -1216,9 +1216,343 @@
                 max-width: 100%;
             }
         }
+        
+        /* Mobile Styles - ULTRATHINK Mobile-First Design */
+        @media (max-width: 768px) {
+            /* Compact Header */
+            .app-header {
+                padding: 10px 15px;
+                position: fixed;
+                width: 100%;
+                top: 0;
+                z-index: 200;
+            }
+            
+            .header-content {
+                gap: 10px;
+            }
+            
+            h1 {
+                font-size: 1.5em;
+            }
+            
+            /* Hide desktop navigation on mobile */
+            .view-tabs {
+                display: none;
+            }
+            
+            /* Mobile Bottom Navigation */
+            .mobile-nav {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: white;
+                border-top: 1px solid #e5e5e7;
+                box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+                z-index: 300;
+                padding: 0;
+                height: 60px;
+            }
+            
+            .mobile-nav-item {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 5px;
+                cursor: pointer;
+                transition: all 0.2s;
+                background: none;
+                border: none;
+                color: #666;
+                min-height: 60px;
+                position: relative;
+            }
+            
+            .mobile-nav-item.active {
+                color: var(--primary);
+            }
+            
+            .mobile-nav-item.active::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 3px;
+                background: var(--primary);
+            }
+            
+            .mobile-nav-icon {
+                font-size: 24px;
+                margin-bottom: 2px;
+            }
+            
+            .mobile-nav-label {
+                font-size: 11px;
+                font-weight: 500;
+            }
+            
+            /* Adjust container for fixed header and bottom nav */
+            .container {
+                padding: 15px;
+                padding-top: 80px; /* Header height + margin */
+                padding-bottom: 70px; /* Bottom nav height + margin */
+                min-height: calc(100vh - 60px);
+            }
+            
+            /* Mobile Stats Grid */
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            
+            .stat-card {
+                padding: 15px;
+            }
+            
+            .stat-number {
+                font-size: 24px;
+            }
+            
+            /* Mobile Filters - Horizontal Scroll */
+            .filters {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                padding: 10px;
+                margin: 0 -15px 15px;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+            }
+            
+            .filters::-webkit-scrollbar {
+                display: none;
+            }
+            
+            /* Mobile Task Cards */
+            .task-item {
+                grid-template-columns: 1fr;
+                gap: 10px;
+                padding: 15px;
+            }
+            
+            .task-checkbox {
+                position: absolute;
+                top: 15px;
+                right: 15px;
+            }
+            
+            .task-details {
+                padding-right: 40px;
+            }
+            
+            .task-actions {
+                display: flex;
+                gap: 10px;
+                justify-content: flex-start;
+                margin-top: 10px;
+            }
+            
+            /* Mobile Kanban - Swipeable */
+            .kanban-board {
+                display: flex;
+                overflow-x: auto;
+                scroll-snap-type: x mandatory;
+                -webkit-overflow-scrolling: touch;
+                margin: 0 -15px;
+                padding: 0 15px;
+                gap: 15px;
+            }
+            
+            .kanban-column {
+                flex: 0 0 calc(100vw - 30px);
+                scroll-snap-align: start;
+                max-width: none;
+            }
+            
+            /* Kanban Indicators */
+            .kanban-indicators {
+                display: flex;
+                justify-content: center;
+                gap: 6px;
+                margin-bottom: 15px;
+                padding: 5px;
+            }
+            
+            .kanban-dot {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: #ddd;
+                transition: all 0.3s;
+                cursor: pointer;
+            }
+            
+            .kanban-dot.active {
+                background: var(--primary);
+                width: 24px;
+                border-radius: 4px;
+            }
+            
+            /* Mobile Tables as Cards */
+            table {
+                display: none;
+            }
+            
+            .mobile-card-list {
+                display: block;
+            }
+            
+            .mobile-card {
+                background: white;
+                border-radius: var(--radius);
+                padding: 15px;
+                margin-bottom: 10px;
+                box-shadow: var(--shadow-light);
+            }
+            
+            /* Touch-Optimized Buttons */
+            .btn, .filter-btn, button {
+                min-height: 44px;
+                min-width: 44px;
+                padding: 12px 16px;
+            }
+            
+            /* Mobile FAB adjustments */
+            .fab {
+                bottom: 70px; /* Above bottom nav */
+                right: 15px;
+            }
+            
+            .fab-menu {
+                bottom: 140px;
+                right: 15px;
+            }
+            
+            /* Modal Adjustments */
+            .form-modal {
+                padding: 0;
+            }
+            
+            .form-content {
+                margin: 0;
+                border-radius: 20px 20px 0 0;
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+            
+            /* Swipe Actions */
+            .swipe-action {
+                position: absolute;
+                right: -100px;
+                top: 0;
+                bottom: 0;
+                width: 100px;
+                background: var(--danger);
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: transform 0.3s;
+            }
+            
+            .task-item.swiped .swipe-action {
+                transform: translateX(-100px);
+            }
+            
+            /* Pull to Refresh */
+            .pull-to-refresh {
+                position: fixed;
+                top: 60px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: white;
+                padding: 8px 16px;
+                border-radius: 20px;
+                box-shadow: var(--shadow-medium);
+                display: none;
+                z-index: 400;
+            }
+            
+            .pull-to-refresh.show {
+                display: block;
+                animation: slideDown 0.3s ease-out;
+            }
+            
+            @keyframes slideDown {
+                from {
+                    transform: translate(-50%, -100%);
+                }
+                to {
+                    transform: translate(-50%, 0);
+                }
+            }
+        }
+        
+        /* Tablet specific adjustments */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .kanban-board {
+                gap: 15px;
+            }
+            
+            .kanban-column {
+                flex: 1;
+                min-width: 250px;
+            }
+            
+            .stats {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        /* Hide mobile elements on desktop */
+        @media (min-width: 769px) {
+            .mobile-nav,
+            .kanban-indicators,
+            .mobile-card-list,
+            .pull-to-refresh {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-nav" id="mobileNav">
+        <button class="mobile-nav-item active" data-view="tasks">
+            <span class="mobile-nav-icon">📋</span>
+            <span class="mobile-nav-label">Aufgaben</span>
+        </button>
+        <button class="mobile-nav-item" data-view="kanban">
+            <span class="mobile-nav-icon">📊</span>
+            <span class="mobile-nav-label">Kanban</span>
+        </button>
+        <button class="mobile-nav-item" data-view="projects">
+            <span class="mobile-nav-icon">🏗️</span>
+            <span class="mobile-nav-label">Projekte</span>
+        </button>
+        <button class="mobile-nav-item" data-view="contractors">
+            <span class="mobile-nav-icon">👷</span>
+            <span class="mobile-nav-label">Dienste</span>
+        </button>
+        <button class="mobile-nav-item" data-view="budget">
+            <span class="mobile-nav-icon">💰</span>
+            <span class="mobile-nav-label">Budget</span>
+        </button>
+    </nav>
+    
+    <!-- Pull to Refresh indicator -->
+    <div class="pull-to-refresh" id="pullToRefresh">
+        🔄 Synchronisiere...
+    </div>
+    
     <div class="app-header">
         <div class="header-content">
             <h1>🏢 Property & Project Manager</h1>
@@ -1269,6 +1603,12 @@
         
         <!-- Kanban View -->
         <div id="kanbanView" class="view-content" style="display: none;">
+            <!-- Mobile Kanban Indicators -->
+            <div class="kanban-indicators" id="kanbanIndicators">
+                <span class="kanban-dot active" data-column="0"></span>
+                <span class="kanban-dot" data-column="1"></span>
+                <span class="kanban-dot" data-column="2"></span>
+            </div>
             <div class="kanban-board" id="kanbanBoard"></div>
         </div>
         
@@ -1632,6 +1972,23 @@
                     tab.addEventListener('click', (e) => this.switchView(e.target.dataset.view));
                 });
                 
+                // Mobile navigation
+                document.querySelectorAll('.mobile-nav-item').forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        const view = e.currentTarget.dataset.view;
+                        this.switchView(view);
+                        // Update mobile nav active state
+                        document.querySelectorAll('.mobile-nav-item').forEach(nav => nav.classList.remove('active'));
+                        e.currentTarget.classList.add('active');
+                    });
+                });
+                
+                // Mobile Kanban swipe functionality
+                if (window.innerWidth <= 768) {
+                    this.setupMobileKanban();
+                    this.setupPullToRefresh();
+                }
+                
                 // Filters
                 document.querySelectorAll('.filter-btn').forEach(btn => {
                     btn.addEventListener('click', (e) => this.setFilter(e.target.dataset.filter));
@@ -1681,9 +2038,14 @@
                 
                 this.state.currentView = view;
                 
-                // Update tabs
+                // Update desktop tabs
                 document.querySelectorAll('.view-tab').forEach(tab => {
                     tab.classList.toggle('active', tab.dataset.view === view);
+                });
+                
+                // Update mobile navigation
+                document.querySelectorAll('.mobile-nav-item').forEach(item => {
+                    item.classList.toggle('active', item.dataset.view === view);
                 });
                 
                 // Hide all views
@@ -2648,6 +3010,113 @@
                 setTimeout(() => {
                     notification.classList.remove('show');
                 }, 3000);
+            }
+            
+            // Mobile-specific methods
+            setupMobileKanban() {
+                const kanbanBoard = document.getElementById('kanbanBoard');
+                const indicators = document.getElementById('kanbanIndicators');
+                if (!kanbanBoard || !indicators) return;
+                
+                let currentColumn = 0;
+                let startX = 0;
+                let scrollLeft = 0;
+                
+                // Touch events for swipe
+                kanbanBoard.addEventListener('touchstart', (e) => {
+                    startX = e.touches[0].pageX - kanbanBoard.offsetLeft;
+                    scrollLeft = kanbanBoard.scrollLeft;
+                });
+                
+                kanbanBoard.addEventListener('touchmove', (e) => {
+                    if (!startX) return;
+                    e.preventDefault();
+                    const x = e.touches[0].pageX - kanbanBoard.offsetLeft;
+                    const walk = (x - startX) * 2;
+                    kanbanBoard.scrollLeft = scrollLeft - walk;
+                });
+                
+                kanbanBoard.addEventListener('touchend', () => {
+                    startX = 0;
+                    // Snap to nearest column
+                    const columnWidth = window.innerWidth - 30;
+                    const scrollPosition = kanbanBoard.scrollLeft;
+                    currentColumn = Math.round(scrollPosition / columnWidth);
+                    kanbanBoard.scrollTo({
+                        left: currentColumn * columnWidth,
+                        behavior: 'smooth'
+                    });
+                    this.updateKanbanIndicators(currentColumn);
+                });
+                
+                // Scroll event to update indicators
+                kanbanBoard.addEventListener('scroll', () => {
+                    const columnWidth = window.innerWidth - 30;
+                    const scrollPosition = kanbanBoard.scrollLeft;
+                    currentColumn = Math.round(scrollPosition / columnWidth);
+                    this.updateKanbanIndicators(currentColumn);
+                });
+                
+                // Click on indicators
+                indicators.querySelectorAll('.kanban-dot').forEach((dot, index) => {
+                    dot.addEventListener('click', () => {
+                        const columnWidth = window.innerWidth - 30;
+                        kanbanBoard.scrollTo({
+                            left: index * columnWidth,
+                            behavior: 'smooth'
+                        });
+                        this.updateKanbanIndicators(index);
+                    });
+                });
+            }
+            
+            updateKanbanIndicators(activeIndex) {
+                document.querySelectorAll('.kanban-dot').forEach((dot, index) => {
+                    dot.classList.toggle('active', index === activeIndex);
+                });
+            }
+            
+            setupPullToRefresh() {
+                let startY = 0;
+                let pullDistance = 0;
+                const threshold = 100;
+                const container = document.querySelector('.container');
+                const pullIndicator = document.getElementById('pullToRefresh');
+                
+                container.addEventListener('touchstart', (e) => {
+                    if (window.scrollY === 0) {
+                        startY = e.touches[0].pageY;
+                    }
+                });
+                
+                container.addEventListener('touchmove', (e) => {
+                    if (startY === 0) return;
+                    
+                    pullDistance = e.touches[0].pageY - startY;
+                    
+                    if (pullDistance > 0 && window.scrollY === 0) {
+                        e.preventDefault();
+                        
+                        if (pullDistance > threshold) {
+                            pullIndicator.classList.add('show');
+                        }
+                    }
+                });
+                
+                container.addEventListener('touchend', async () => {
+                    if (pullDistance > threshold) {
+                        // Trigger sync
+                        if (window.syncManager && window.syncManager.sync) {
+                            await window.syncManager.sync();
+                        }
+                        setTimeout(() => {
+                            pullIndicator.classList.remove('show');
+                        }, 1000);
+                    }
+                    
+                    startY = 0;
+                    pullDistance = 0;
+                });
             }
             
             // Utility Methods
