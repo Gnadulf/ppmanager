@@ -6,6 +6,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Property Manager">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#007aff">
+    <link rel="apple-touch-icon" href="/icon-192.png">
     <title>Property Management System</title>
     <style>
         /* Reset & Base Styles */
@@ -608,6 +611,231 @@
             color: #666;
         }
         
+        /* Wiki Styles */
+        .wiki-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 20px;
+            height: calc(100vh - 200px);
+        }
+        
+        .wiki-sidebar {
+            background: white;
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow-light);
+            overflow-y: auto;
+        }
+        
+        .wiki-sidebar h3 {
+            margin-bottom: 15px;
+            color: var(--gray-dark);
+        }
+        
+        .wiki-filter-section {
+            background: var(--gray-light);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .wiki-filter-section h4 {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .wiki-user-type {
+            display: flex;
+            gap: 8px;
+            flex-direction: column;
+        }
+        
+        .wiki-type-btn {
+            background: white;
+            border: 2px solid #e0e0e0;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            color: var(--gray-dark);
+            text-align: left;
+        }
+        
+        .wiki-type-btn:hover {
+            background: #f8f8f8;
+            border-color: var(--primary);
+        }
+        
+        .wiki-type-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .wiki-categories {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .wiki-category {
+            background: var(--gray-light);
+            border: none;
+            padding: 12px 16px;
+            border-radius: 8px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            color: var(--gray-dark);
+        }
+        
+        .wiki-category:hover {
+            background: #e8e8ed;
+            transform: translateX(5px);
+        }
+        
+        .wiki-category.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .wiki-category.hidden {
+            display: none;
+        }
+        
+        .wiki-content {
+            background: white;
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow-light);
+            overflow-y: auto;
+        }
+        
+        .wiki-section {
+            margin-bottom: 30px;
+        }
+        
+        .wiki-section h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--gray-light);
+        }
+        
+        .wiki-section h3 {
+            color: var(--gray-dark);
+            margin: 20px 0 15px 0;
+        }
+        
+        .wiki-item {
+            background: var(--gray-light);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .wiki-item.vermieter-only,
+        .wiki-item.eigennutzer-only {
+            position: relative;
+        }
+        
+        .wiki-item.vermieter-only::before {
+            content: '🏢 Nur Vermieter';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .wiki-item.eigennutzer-only::before {
+            content: '🏡 Nur Eigennutzer';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #e8f5e9;
+            color: #388e3c;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .wiki-item.hidden {
+            display: none;
+        }
+        
+        .wiki-item-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .wiki-item-title {
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--gray-dark);
+        }
+        
+        .wiki-frequency {
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .wiki-details {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #666;
+        }
+        
+        .wiki-warning {
+            background: #fff3cd;
+            border-left: 4px solid var(--warning);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .wiki-info {
+            background: #e3f2fd;
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .wiki-checklist {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .wiki-checklist li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        
+        .wiki-checklist li:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+        }
+        
         /* Forms & Modals */
         .form-modal {
             display: none;
@@ -894,231 +1122,6 @@
         .empty-state-text {
             font-size: 18px;
             margin-bottom: 20px;
-        }
-        
-        /* Wiki Styles */
-        .wiki-container {
-            display: grid;
-            grid-template-columns: 250px 1fr;
-            gap: 20px;
-            height: calc(100vh - 200px);
-        }
-        
-        .wiki-sidebar {
-            background: white;
-            border-radius: var(--radius);
-            padding: 20px;
-            box-shadow: var(--shadow-light);
-            overflow-y: auto;
-        }
-        
-        .wiki-sidebar h3 {
-            margin-bottom: 15px;
-            color: var(--gray-dark);
-        }
-        
-        .wiki-filter-section {
-            background: var(--gray-light);
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .wiki-filter-section h4 {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 10px;
-        }
-        
-        .wiki-user-type {
-            display: flex;
-            gap: 8px;
-            flex-direction: column;
-        }
-        
-        .wiki-type-btn {
-            background: white;
-            border: 2px solid #e0e0e0;
-            padding: 10px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 14px;
-            color: var(--gray-dark);
-            text-align: left;
-        }
-        
-        .wiki-type-btn:hover {
-            background: #f8f8f8;
-            border-color: var(--primary);
-        }
-        
-        .wiki-type-btn.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-        
-        .wiki-categories {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        
-        .wiki-category {
-            background: var(--gray-light);
-            border: none;
-            padding: 12px 16px;
-            border-radius: 8px;
-            text-align: left;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 14px;
-            color: var(--gray-dark);
-        }
-        
-        .wiki-category:hover {
-            background: #e8e8ed;
-            transform: translateX(5px);
-        }
-        
-        .wiki-category.active {
-            background: var(--primary);
-            color: white;
-        }
-        
-        .wiki-category.hidden {
-            display: none;
-        }
-        
-        .wiki-content {
-            background: white;
-            border-radius: var(--radius);
-            padding: 30px;
-            box-shadow: var(--shadow-light);
-            overflow-y: auto;
-        }
-        
-        .wiki-section {
-            margin-bottom: 30px;
-        }
-        
-        .wiki-section h2 {
-            color: var(--primary);
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--gray-light);
-        }
-        
-        .wiki-section h3 {
-            color: var(--gray-dark);
-            margin: 20px 0 15px 0;
-        }
-        
-        .wiki-item {
-            background: var(--gray-light);
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .wiki-item.vermieter-only,
-        .wiki-item.eigennutzer-only {
-            position: relative;
-        }
-        
-        .wiki-item.vermieter-only::before {
-            content: '🏢 Nur Vermieter';
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #e3f2fd;
-            color: #1976d2;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-        
-        .wiki-item.eigennutzer-only::before {
-            content: '🏡 Nur Eigennutzer';
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #e8f5e9;
-            color: #388e3c;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-        
-        .wiki-item.hidden {
-            display: none;
-        }
-        
-        .wiki-item-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-        
-        .wiki-item-title {
-            font-weight: 600;
-            font-size: 16px;
-            color: var(--gray-dark);
-        }
-        
-        .wiki-frequency {
-            background: var(--primary);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 15px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        
-        .wiki-details {
-            font-size: 14px;
-            line-height: 1.6;
-            color: #666;
-        }
-        
-        .wiki-warning {
-            background: #fff3cd;
-            border-left: 4px solid var(--warning);
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 0 8px 8px 0;
-        }
-        
-        .wiki-info {
-            background: #e3f2fd;
-            border-left: 4px solid var(--primary);
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 0 8px 8px 0;
-        }
-        
-        .wiki-checklist {
-            list-style: none;
-            padding: 0;
-        }
-        
-        .wiki-checklist li {
-            position: relative;
-            padding-left: 30px;
-            margin-bottom: 10px;
-            line-height: 1.6;
-        }
-        
-        .wiki-checklist li:before {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            color: var(--success);
-            font-weight: bold;
         }
         
         /* Responsive Design */
@@ -1562,7 +1565,9 @@
                     contractors: [],
                     documents: [],
                     currentView: 'tasks',
-                    currentFilter: 'all'
+                    currentFilter: 'all',
+                    wikiUserType: 'all',
+                    currentWikiCategory: 'verkehrssicherung'
                 };
                 
                 // Make instance globally available
@@ -2049,6 +2054,927 @@
                             <div class="empty-state-icon">💰</div>
                             <div class="empty-state-text">Noch keine Budgets erfasst</div>
                         </div>
-                    ;
+                    `;
                 }
             }
+            
+            calculateBuildingBudgets() {
+                const budgets = {};
+                
+                // Initialize building budgets
+                const buildings = ['KDW17', 'KDW11', 'EC450', 'EC362', 'S28', 'TH', 'Schwimmbad', 'Zentrale', 'Gästewohnung', 'Schmalenbecker Str', 'Felbrunnenstr', 'HIS'];
+                buildings.forEach(building => {
+                    budgets[building] = { tasks: 0, projects: 0, total: 0, spent: 0 };
+                });
+                
+                // Calculate task budgets
+                this.state.tasks.forEach(task => {
+                    if (task.building && task.budget) {
+                        budgets[task.building].tasks += parseFloat(task.budget) || 0;
+                        if (task.completed) {
+                            budgets[task.building].spent += parseFloat(task.budget) || 0;
+                        }
+                    }
+                });
+                
+                // Calculate project budgets
+                this.state.projects.forEach(project => {
+                    if (project.building && project.budget) {
+                        budgets[project.building].projects += parseFloat(project.budget) || 0;
+                        if (project.status === 'completed') {
+                            budgets[project.building].spent += parseFloat(project.budget) || 0;
+                        }
+                    }
+                });
+                
+                // Calculate totals
+                Object.keys(budgets).forEach(building => {
+                    budgets[building].total = budgets[building].tasks + budgets[building].projects;
+                });
+                
+                return budgets;
+            }
+            
+            renderDocuments() {
+                const docGrid = document.getElementById('docGrid');
+                
+                if (this.state.documents.length === 0) {
+                    docGrid.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📄</div>
+                            <div class="empty-state-text">Keine Dokumente vorhanden</div>
+                            <button onclick="app.showNotification('Dokumenten-Upload wird in Kürze verfügbar sein')">Dokument hochladen</button>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                docGrid.innerHTML = this.state.documents.map(doc => `
+                    <div class="doc-item">
+                        <div class="doc-icon">${this.getDocIcon(doc.type)}</div>
+                        <div class="doc-name">${this.escapeHtml(doc.name)}</div>
+                        <div class="doc-date">${this.formatDate(doc.date)}</div>
+                    </div>
+                `).join('');
+            }
+            
+            renderWiki() {
+                const wikiContent = document.getElementById('wikiContent');
+                const category = this.state.currentWikiCategory;
+                
+                const wikiData = this.getWikiData();
+                const categoryData = wikiData[category];
+                
+                if (!categoryData) {
+                    wikiContent.innerHTML = '<p>Kategorie nicht gefunden</p>';
+                    return;
+                }
+                
+                wikiContent.innerHTML = `
+                    <div class="wiki-section">
+                        <h2>${categoryData.title}</h2>
+                        ${categoryData.description ? `<p>${categoryData.description}</p>` : ''}
+                        ${categoryData.items.map(item => this.renderWikiItem(item)).join('')}
+                    </div>
+                `;
+            }
+            
+            renderWikiItem(item) {
+                const shouldShow = this.shouldShowWikiItem(item);
+                
+                return `
+                    <div class="wiki-item ${item.userType ? item.userType + '-only' : ''} ${!shouldShow ? 'hidden' : ''}">
+                        <div class="wiki-item-header">
+                            <div class="wiki-item-title">${item.title}</div>
+                            ${item.frequency ? `<div class="wiki-frequency">${item.frequency}</div>` : ''}
+                        </div>
+                        <div class="wiki-details">
+                            ${item.content}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            shouldShowWikiItem(item) {
+                if (this.state.wikiUserType === 'all') return true;
+                if (!item.userType) return true;
+                return item.userType === this.state.wikiUserType;
+            }
+            
+            getWikiData() {
+                return {
+                    verkehrssicherung: {
+                        title: '🚧 Verkehrssicherungspflichten',
+                        description: 'Alle wichtigen Maßnahmen zur Sicherung von Gebäuden und Grundstücken',
+                        items: [
+                            {
+                                title: 'Winterdienst',
+                                frequency: 'Bei Bedarf',
+                                content: `
+                                    <p>Räum- und Streupflicht bei Schnee und Glätte:</p>
+                                    <ul class="wiki-checklist">
+                                        <li>Werktags: 7:00 - 20:00 Uhr</li>
+                                        <li>Sonn-/Feiertags: 9:00 - 20:00 Uhr</li>
+                                        <li>Gehwege 1,20m breit räumen</li>
+                                        <li>Abstumpfende Mittel verwenden</li>
+                                    </ul>
+                                    <div class="wiki-warning">
+                                        ⚠️ Bei Nichterfüllung: Haftung für Unfälle!
+                                    </div>
+                                `
+                            },
+                            {
+                                title: 'Baumkontrolle',
+                                frequency: '2x jährlich',
+                                content: `
+                                    <p>Regelmäßige Sichtkontrolle aller Bäume auf dem Grundstück:</p>
+                                    <ul class="wiki-checklist">
+                                        <li>Totholz entfernen</li>
+                                        <li>Standsicherheit prüfen</li>
+                                        <li>Schädlingsbefall kontrollieren</li>
+                                        <li>Dokumentation führen</li>
+                                    </ul>
+                                `
+                            },
+                            {
+                                title: 'Spielplatzprüfung',
+                                frequency: 'Wöchentlich',
+                                content: `
+                                    <p>Sicherheitskontrolle von Spielgeräten:</p>
+                                    <ul class="wiki-checklist">
+                                        <li>Sichtprüfung auf Beschädigungen</li>
+                                        <li>Verankerungen kontrollieren</li>
+                                        <li>Fallschutz prüfen</li>
+                                        <li>Jährliche Hauptuntersuchung durch Sachkundigen</li>
+                                    </ul>
+                                `,
+                                userType: 'vermieter'
+                            }
+                        ]
+                    },
+                    brandschutz: {
+                        title: '🔥 Brandschutz',
+                        description: 'Wichtige Brandschutzmaßnahmen und Prüfungen',
+                        items: [
+                            {
+                                title: 'Rauchwarnmelder',
+                                frequency: 'Jährlich',
+                                content: `
+                                    <p>Prüfung und Wartung von Rauchwarnmeldern:</p>
+                                    <ul class="wiki-checklist">
+                                        <li>Funktionstest durchführen</li>
+                                        <li>Batterie prüfen/wechseln</li>
+                                        <li>Verschmutzung entfernen</li>
+                                        <li>Dokumentation der Prüfung</li>
+                                    </ul>
+                                    <div class="wiki-info">
+                                        💡 In allen Schlafräumen, Kinderzimmern und Fluren Pflicht!
+                                    </div>
+                                `
+                            },
+                            {
+                                title: 'Feuerlöscher',
+                                frequency: 'Alle 2 Jahre',
+                                content: `
+                                    <p>Wartung durch Fachfirma:</p>
+                                    <ul class="wiki-checklist">
+                                        <li>Prüfplakette kontrollieren</li>
+                                        <li>Zugänglichkeit sicherstellen</li>
+                                        <li>Beschilderung prüfen</li>
+                                        <li>Nach Benutzung sofort erneuern</li>
+                                    </ul>
+                                `,
+                                userType: 'vermieter'
+                            }
+                        ]
+                    },
+                    hygiene: {
+                        title: '🧹 Hygiene & Gesundheit',
+                        description: 'Maßnahmen für Sauberkeit und Gesundheitsschutz',
+                        items: [
+                            {
+                                title: 'Trinkwasserhygiene',
+                                frequency: 'Jährlich',
+                                content: `
+                                    <p>Legionellenprüfung in Großanlagen:</p>
+                                    <ul class="wiki-checklist">
+                                        <li>Probeentnahme durch zertifiziertes Labor</li>
+                                        <li>Temperaturmessung an Entnahmestellen</li>
+                                        <li>Dokumentation aufbewahren</li>
+                                        <li>Bei Befall: Sofortmaßnahmen einleiten</li>
+                                    </ul>
+                                `,
+                                userType: 'vermieter'
+                            },
+                            {
+                                title: 'Schädlingsbekämpfung',
+                                frequency: 'Bei Bedarf',
+                                content: `
+                                    <p>Maßnahmen bei Schädlingsbefall:</p>
+                                    <ul class="wiki-checklist">
+                                        <li>Befallsart identifizieren</li>
+                                        <li>Fachfirma beauftragen</li>
+                                        <li>Mieter informieren</li>
+                                        <li>Nachkontrolle durchführen</li>
+                                    </ul>
+                                `
+                            }
+                        ]
+                    },
+                    energie: {
+                        title: '⚡ Energie & Umwelt',
+                        description: 'Energieeffizienz und Umweltschutz',
+                        items: [
+                            {
+                                title: 'Heizungsanlage',
+                                frequency: 'Jährlich',
+                                content: `
+                                    <p>Wartung und Optimierung:</p>
+                                    <ul class="wiki-checklist">
+                                        <li>Brennerwartung durchführen</li>
+                                        <li>Abgasmessung (Schornsteinfeger)</li>
+                                        <li>Hydraulischer Abgleich prüfen</li>
+                                        <li>Heizkurve optimieren</li>
+                                    </ul>
+                                `
+                            },
+                            {
+                                title: 'Energieausweis',
+                                frequency: 'Alle 10 Jahre',
+                                content: `
+                                    <p>Erstellung und Aktualisierung:</p>
+                                    <ul class="wiki-checklist">
+                                        <li>Bei Vermietung/Verkauf pflicht</li>
+                                        <li>Verbrauchsausweis oder Bedarfsausweis</li>
+                                        <li>Modernisierungsempfehlungen beachten</li>
+                                    </ul>
+                                `,
+                                userType: 'vermieter'
+                            }
+                        ]
+                    },
+                    dokumentation: {
+                        title: '📋 Dokumentation',
+                        description: 'Wichtige Unterlagen und Nachweise',
+                        items: [
+                            {
+                                title: 'Betriebskostenabrechnung',
+                                frequency: 'Jährlich',
+                                content: `
+                                    <p>Erstellung und Prüfung:</p>
+                                    <ul class="wiki-checklist">
+                                        <li>Abrechnungszeitraum beachten</li>
+                                        <li>Umlageschlüssel prüfen</li>
+                                        <li>Belege sammeln und archivieren</li>
+                                        <li>Frist: 12 Monate nach Abrechnungsperiode</li>
+                                    </ul>
+                                `,
+                                userType: 'vermieter'
+                            },
+                            {
+                                title: 'Wartungsnachweise',
+                                frequency: 'Fortlaufend',
+                                content: `
+                                    <p>Dokumentation aller Wartungen:</p>
+                                    <ul class="wiki-checklist">
+                                        <li>Wartungsprotokolle abheften</li>
+                                        <li>Rechnungen aufbewahren</li>
+                                        <li>Digitale Kopien erstellen</li>
+                                        <li>Aufbewahrungsfrist: mind. 2 Jahre</li>
+                                    </ul>
+                                `
+                            }
+                        ]
+                    },
+                    vermietung: {
+                        title: '🏠 Vermietung',
+                        description: 'Spezielle Pflichten für Vermieter',
+                        items: [
+                            {
+                                title: 'Mieterhöhung',
+                                frequency: 'Nach Bedarf',
+                                content: `
+                                    <p>Rechtliche Vorgaben beachten:</p>
+                                    <ul class="wiki-checklist">
+                                        <li>Kappungsgrenze prüfen (15-20%)</li>
+                                        <li>Mietspiegel heranziehen</li>
+                                        <li>Formelle Anforderungen erfüllen</li>
+                                        <li>Zustimmungsfrist: 2 Monate</li>
+                                    </ul>
+                                `,
+                                userType: 'vermieter'
+                            },
+                            {
+                                title: 'Nebenkostenvorauszahlung',
+                                frequency: 'Jährlich prüfen',
+                                content: `
+                                    <p>Anpassung der Vorauszahlungen:</p>
+                                    <ul class="wiki-checklist">
+                                        <li>Nach Abrechnung prüfen</li>
+                                        <li>Bei Nachzahlung > 10% anpassen</li>
+                                        <li>Schriftlich mitteilen</li>
+                                        <li>Zum nächsten Monat wirksam</li>
+                                    </ul>
+                                `,
+                                userType: 'vermieter'
+                            }
+                        ]
+                    },
+                    checkliste: {
+                        title: '✅ Checklisten',
+                        description: 'Praktische Checklisten für verschiedene Situationen',
+                        items: [
+                            {
+                                title: 'Wohnungsübergabe',
+                                content: `
+                                    <p>Checkliste für Ein-/Auszug:</p>
+                                    <ul class="wiki-checklist">
+                                        <li>Übergabeprotokoll erstellen</li>
+                                        <li>Zählerstände notieren</li>
+                                        <li>Schlüssel dokumentieren</li>
+                                        <li>Mängel fotografieren</li>
+                                        <li>Kaution verrechnen/zurückzahlen</li>
+                                    </ul>
+                                `
+                            },
+                            {
+                                title: 'Jahresinspektion',
+                                content: `
+                                    <p>Jährliche Gebäudebegehung:</p>
+                                    <ul class="wiki-checklist">
+                                        <li>Dach und Dachrinnen</li>
+                                        <li>Fassade und Außenanlagen</li>
+                                        <li>Keller und Technikräume</li>
+                                        <li>Treppenhäuser und Flure</li>
+                                        <li>Gemeinschaftsräume</li>
+                                    </ul>
+                                `
+                            }
+                        ]
+                    }
+                };
+            }
+            
+            // Task Management Methods
+            toggleTask(taskId) {
+                const task = this.state.tasks.find(t => t.id === taskId);
+                if (task) {
+                    task.completed = !task.completed;
+                    this.saveData();
+                    this.render();
+                }
+            }
+            
+            handleTaskSubmit(e) {
+                e.preventDefault();
+                
+                const form = e.target;
+                const stakeholdersInput = form.taskStakeholders.value;
+                const stakeholders = stakeholdersInput ? stakeholdersInput.split(',').map(s => s.trim()).filter(s => s) : [];
+                
+                const newTask = {
+                    id: Date.now(),
+                    title: form.taskTitle.value,
+                    building: form.taskBuilding.value,
+                    priority: form.taskPriority.value,
+                    deadline: form.taskDeadline.value,
+                    recurrence: form.taskRecurrence.value,
+                    contractor: form.taskContractor.value,
+                    budget: parseFloat(form.taskBudget.value) || 0,
+                    stakeholders: stakeholders,
+                    description: form.taskDescription.value,
+                    completed: false,
+                    status: 'todo',
+                    createdAt: new Date().toISOString()
+                };
+                
+                this.state.tasks.push(newTask);
+                this.saveData();
+                this.closeModal('taskModal');
+                form.reset();
+                this.render();
+                this.showNotification('Aufgabe erfolgreich erstellt');
+                
+                // Handle recurring tasks
+                if (newTask.recurrence) {
+                    this.scheduleRecurringTask(newTask);
+                }
+            }
+            
+            scheduleRecurringTask(task) {
+                // This is a placeholder for recurring task logic
+                // In a real app, you'd implement proper recurring task scheduling
+            }
+            
+            // Project Management Methods
+            handleProjectSubmit(e) {
+                e.preventDefault();
+                
+                const form = e.target;
+                const milestonesText = form.projectMilestones.value;
+                const milestones = [];
+                
+                if (milestonesText) {
+                    const lines = milestonesText.split('\n');
+                    lines.forEach(line => {
+                        const match = line.match(/(\d{2}\.\d{2}\.\d{4})\s*-\s*(.+)/);
+                        if (match) {
+                            milestones.push({
+                                date: this.parseGermanDate(match[1]),
+                                text: match[2].trim(),
+                                done: false
+                            });
+                        }
+                    });
+                }
+                
+                const newProject = {
+                    id: Date.now(),
+                    title: form.projectTitle.value,
+                    building: form.projectBuilding.value,
+                    status: form.projectStatus.value,
+                    startDate: form.projectStart.value,
+                    endDate: form.projectEnd.value,
+                    budget: parseFloat(form.projectBudget.value) || 0,
+                    milestones: milestones,
+                    description: form.projectDescription.value,
+                    createdAt: new Date().toISOString()
+                };
+                
+                this.state.projects.push(newProject);
+                this.saveData();
+                this.closeModal('projectModal');
+                form.reset();
+                this.render();
+                this.showNotification('Projekt erfolgreich erstellt');
+            }
+            
+            toggleMilestone(projectId, milestoneIndex) {
+                const project = this.state.projects.find(p => p.id === projectId);
+                if (project && project.milestones[milestoneIndex]) {
+                    project.milestones[milestoneIndex].done = !project.milestones[milestoneIndex].done;
+                    this.saveData();
+                    this.render();
+                }
+            }
+            
+            deleteProject(projectId) {
+                if (confirm('Möchten Sie dieses Projekt wirklich löschen?')) {
+                    this.state.projects = this.state.projects.filter(p => p.id !== projectId);
+                    this.saveData();
+                    this.render();
+                    this.showNotification('Projekt gelöscht');
+                }
+            }
+            
+            // Contractor Management Methods
+            handleContractorSubmit(e) {
+                e.preventDefault();
+                
+                const form = e.target;
+                const servicesInput = form.contractorServices.value;
+                const services = servicesInput.split(',').map(s => s.trim()).filter(s => s);
+                
+                const newContractor = {
+                    id: Date.now(),
+                    name: form.contractorName.value,
+                    contact: form.contractorContact.value,
+                    phone: form.contractorPhone.value,
+                    email: form.contractorEmail.value,
+                    services: services,
+                    notes: form.contractorNotes.value,
+                    createdAt: new Date().toISOString()
+                };
+                
+                this.state.contractors.push(newContractor);
+                this.saveData();
+                this.closeModal('contractorModal');
+                form.reset();
+                this.render();
+                this.showNotification('Dienstleister erfolgreich hinzugefügt');
+            }
+            
+            deleteContractor(contractorId) {
+                if (confirm('Möchten Sie diesen Dienstleister wirklich löschen?')) {
+                    this.state.contractors = this.state.contractors.filter(c => c.id !== contractorId);
+                    this.saveData();
+                    this.render();
+                    this.showNotification('Dienstleister gelöscht');
+                }
+            }
+            
+            updateContractorSelect() {
+                const select = document.getElementById('taskContractor');
+                if (select) {
+                    select.innerHTML = '<option value="">Kein Dienstleister</option>' +
+                        this.state.contractors.map(c => `<option value="${c.id}">${this.escapeHtml(c.name)}</option>`).join('');
+                }
+            }
+            
+            // Wiki Methods
+            showWikiCategory(category) {
+                this.state.currentWikiCategory = category;
+                
+                document.querySelectorAll('.wiki-category').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.category === category);
+                });
+                
+                this.renderWiki();
+            }
+            
+            setWikiUserType(type) {
+                this.state.wikiUserType = type;
+                
+                document.querySelectorAll('.wiki-type-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.type === type);
+                });
+                
+                // Hide/show vermieter-only categories
+                document.querySelectorAll('.wiki-category[data-vermieter-only]').forEach(btn => {
+                    btn.classList.toggle('hidden', type === 'eigennutzer');
+                });
+                
+                this.renderWiki();
+            }
+            
+            // UI Helper Methods
+            toggleFabMenu() {
+                const fabMenu = document.getElementById('fabMenu');
+                fabMenu.classList.toggle('show');
+            }
+            
+            handleFabOption(action) {
+                this.toggleFabMenu();
+                
+                switch(action) {
+                    case 'task':
+                        this.openModal('taskModal');
+                        break;
+                    case 'project':
+                        this.openModal('projectModal');
+                        break;
+                    case 'contractor':
+                        this.openModal('contractorModal');
+                        break;
+                    case 'doc':
+                        this.showNotification('Dokumenten-Upload wird in Kürze verfügbar sein');
+                        break;
+                    case 'export':
+                        this.exportData();
+                        break;
+                }
+            }
+            
+            openModal(modalId) {
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.style.display = 'block';
+                    this.updateContractorSelect();
+                }
+            }
+            
+            closeModal(modalId) {
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.style.display = 'none';
+                }
+            }
+            
+            showNotification(message, type = 'success') {
+                const notification = document.getElementById('notification');
+                notification.textContent = message;
+                notification.className = `notification show ${type}`;
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            }
+            
+            // Utility Methods
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+            
+            formatDate(dateString) {
+                if (!dateString) return '';
+                const date = new Date(dateString);
+                return date.toLocaleDateString('de-DE', { 
+                    day: '2-digit', 
+                    month: '2-digit', 
+                    year: 'numeric' 
+                });
+            }
+            
+            parseGermanDate(dateString) {
+                const parts = dateString.split('.');
+                if (parts.length === 3) {
+                    return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+                }
+                return dateString;
+            }
+            
+            getRecurrenceText(recurrence) {
+                const texts = {
+                    daily: 'Täglich',
+                    weekly: 'Wöchentlich',
+                    '8weeks': '8-Wöchentlich',
+                    '16weeks': '16-Wöchentlich',
+                    yearly: 'Jährlich'
+                };
+                return texts[recurrence] || recurrence;
+            }
+            
+            getStatusText(status) {
+                const texts = {
+                    planning: 'Planung',
+                    active: 'Aktiv',
+                    completed: 'Abgeschlossen'
+                };
+                return texts[status] || status;
+            }
+            
+            getDocIcon(type) {
+                const icons = {
+                    pdf: '📄',
+                    image: '🖼️',
+                    doc: '📝',
+                    xls: '📊',
+                    default: '📎'
+                };
+                return icons[type] || icons.default;
+            }
+            
+            // Export functionality
+            exportData() {
+                const data = {
+                    tasks: this.state.tasks,
+                    projects: this.state.projects,
+                    contractors: this.state.contractors,
+                    documents: this.state.documents,
+                    exportDate: new Date().toISOString()
+                };
+                
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `property-manager-backup-${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                this.showNotification('Daten erfolgreich exportiert');
+            }
+        }
+        
+        // Initialize app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            window.app = new PropertyManager();
+        });
+
+        // Register Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        // Service Worker registered successfully
+                    })
+                    .catch(error => console.error('Service Worker registration failed:', error));
+            });
+        }
+    </script>
+
+    <!-- Supabase Client Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Supabase Configuration -->
+    <script src="supabase-config.js"></script>
+
+    <!-- Supabase Integration -->
+    <script>
+        // Supabase Sync Manager
+        const syncManager = {
+            syncInProgress: false,
+            userId: null,
+            autoSyncInterval: null,
+            
+            async init() {
+                try {
+                    // Initialize Supabase client
+                    const supabase = window.supabase.createClient(
+                        SUPABASE_CONFIG.url,
+                        SUPABASE_CONFIG.anonKey
+                    );
+
+                    // Try to get existing session
+                    const { data: { session } } = await supabase.auth.getSession();
+                    
+                    if (session) {
+                        this.userId = session.user.id;
+                        // Existing session found
+                    } else {
+                        // Anonymous sign-in
+                        const { data, error } = await supabase.auth.signInAnonymously();
+                        if (error) throw error;
+                        this.userId = data.user.id;
+                        // New anonymous session created
+                    }
+                    
+                    // Store supabase client for later use
+                    this.supabase = supabase;
+                    
+                    // Initial sync
+                    await this.sync();
+                    
+                    // Auto-sync every 30 seconds
+                    this.autoSyncInterval = setInterval(() => this.sync(), 30000);
+                    
+                    // Sync on changes
+                    this.setupChangeListeners();
+                    
+                    // Add sync button to UI
+                    this.addSyncButton();
+                    this.showSyncStatus('✅ Cloud-Sync aktiv');
+                    
+                    return true;
+                } catch (error) {
+                    console.error('Supabase error:', error);
+                    this.showSyncStatus('❌ Cloud-Sync nicht verfügbar', 'error');
+                    return false;
+                }
+            },
+            
+            async sync() {
+                if (this.syncInProgress) return;
+                
+                // Show sync indicator
+                this.showSyncIndicator(true);
+                
+                try {
+                    await this.pullData();
+                    await this.pushData();
+                    this.showSyncStatus('✅ Synchronisiert');
+                } catch (error) {
+                    console.error('Sync error:', error);
+                    this.showSyncStatus('❌ Sync fehlgeschlagen', 'error');
+                } finally {
+                    this.showSyncIndicator(false);
+                }
+            },
+            
+            async pullData() {
+                this.syncInProgress = true;
+                
+                try {
+                    // Fetch tasks
+                    const { data: tasks, error: tasksError } = await this.supabase
+                        .from('tasks')
+                        .select('*')
+                        .eq('user_id', this.userId)
+                        .order('deadline', { ascending: true });
+                    
+                    if (tasksError) throw tasksError;
+                    
+                    // Fetch projects
+                    const { data: projects, error: projectsError } = await this.supabase
+                        .from('projects')
+                        .select('*')
+                        .eq('user_id', this.userId)
+                        .order('start_date', { ascending: true });
+                    
+                    if (projectsError) throw projectsError;
+                    
+                    // Fetch contractors
+                    const { data: contractors, error: contractorsError } = await this.supabase
+                        .from('contractors')
+                        .select('*')
+                        .eq('user_id', this.userId)
+                        .order('name', { ascending: true });
+                    
+                    if (contractorsError) throw contractorsError;
+                    
+                    // Update app state if data exists
+                    if (window.app && tasks && projects && contractors) {
+                        window.app.state.tasks = tasks;
+                        window.app.state.projects = projects;
+                        window.app.state.contractors = contractors;
+                        window.app.saveState();
+                        window.app.render();
+                    }
+                    
+                } finally {
+                    this.syncInProgress = false;
+                }
+            },
+            
+            async pushData() {
+                if (this.syncInProgress || !window.app) return;
+                this.syncInProgress = true;
+                
+                try {
+                    const { tasks, projects, contractors } = window.app.state;
+                    
+                    // Upsert tasks
+                    if (tasks.length > 0) {
+                        const { error } = await this.supabase
+                            .from('tasks')
+                            .upsert(tasks.map(t => ({ ...t, user_id: this.userId })));
+                        if (error) throw error;
+                    }
+                    
+                    // Upsert projects
+                    if (projects.length > 0) {
+                        const { error } = await this.supabase
+                            .from('projects')
+                            .upsert(projects.map(p => ({ ...p, user_id: this.userId })));
+                        if (error) throw error;
+                    }
+                    
+                    // Upsert contractors
+                    if (contractors.length > 0) {
+                        const { error } = await this.supabase
+                            .from('contractors')
+                            .upsert(contractors.map(c => ({ ...c, user_id: this.userId })));
+                        if (error) throw error;
+                    }
+                    
+                } finally {
+                    this.syncInProgress = false;
+                }
+            },
+            
+            setupChangeListeners() {
+                // Extend original saveState method
+                if (window.app) {
+                    const originalSaveState = window.app.saveState.bind(window.app);
+                    window.app.saveState = function() {
+                        originalSaveState();
+                        // Debounced push after 2 seconds
+                        clearTimeout(syncManager.pushTimeout);
+                        syncManager.pushTimeout = setTimeout(() => {
+                            syncManager.pushData();
+                        }, 2000);
+                    };
+                }
+            },
+            
+            addSyncButton() {
+                const controls = document.querySelector('.controls');
+                if (controls && !document.getElementById('sync-button')) {
+                    const syncButton = document.createElement('button');
+                    syncButton.id = 'sync-button';
+                    syncButton.className = 'primary-button';
+                    syncButton.innerHTML = '🔄 Sync';
+                    syncButton.onclick = () => this.sync();
+                    syncButton.style.marginLeft = '10px';
+                    controls.appendChild(syncButton);
+                }
+            },
+            
+            showSyncIndicator(show) {
+                let indicator = document.getElementById('sync-indicator');
+                if (!indicator) {
+                    indicator = document.createElement('div');
+                    indicator.id = 'sync-indicator';
+                    indicator.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        background: rgba(0, 122, 255, 0.9);
+                        color: white;
+                        padding: 8px 16px;
+                        border-radius: 20px;
+                        font-size: 14px;
+                        z-index: 1000;
+                        display: none;
+                    `;
+                    indicator.textContent = '🔄 Synchronisiere...';
+                    document.body.appendChild(indicator);
+                }
+                indicator.style.display = show ? 'block' : 'none';
+            },
+            
+            showSyncStatus(message, type = 'success') {
+                if (window.app && window.app.showNotification) {
+                    window.app.showNotification(message);
+                }
+            }
+        };
+        
+        // Initialize Supabase sync after app is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(async () => {
+                // Only initialize if credentials are configured
+                if (SUPABASE_CONFIG.url !== 'YOUR_SUPABASE_PROJECT_URL') {
+                    // Starting Supabase sync
+                    await syncManager.init();
+                } else {
+                    // Supabase not configured - running in offline mode
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

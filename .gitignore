@@ -11,6 +11,9 @@ yarn-error.log*
 .env.development.local
 .env.test.local
 
+# Supabase credentials
+supabase-config.js
+
 # Backups
 backups/
 *.backup

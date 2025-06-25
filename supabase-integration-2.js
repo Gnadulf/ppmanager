@@ -2,8 +2,8 @@
 // Fügen Sie dieses Script vor dem schließenden </body> Tag in Ihre HTML-Datei ein
 
 // 1. Ersetzen Sie diese Werte mit Ihren Supabase-Credentials
-const SUPABASE_URL = 'https://YOUR_PROJECT.supabase.co'
-const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY'
+const SUPABASE_URL = https://ezeltpwgrgakwwrpcwlu.supabase.co
+const SUPABASE_ANON_KEY = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV6ZWx0cHdncmdha3d3cnBjd2x1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA3ODU0MjksImV4cCI6MjA2NjM2MTQyOX0.IkdqizAdjEUKqqE2InLe0Jfy56q0lmqlgBfI9h8MaeE
 
 // 2. Fügen Sie diese Script-Tags vor dem Integration-Script ein:
 // <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

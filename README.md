@@ -18,8 +18,8 @@ Ein umfassendes Immobilienverwaltungssystem für Vermieter und Eigennutzer.
 ### Option 1: Lokale Nutzung
 ```bash
 # Repository klonen
-git clone https://github.com/yourusername/property-manager.git
-cd property-manager
+git clone https://github.com/Gnadulf/ppmanager.git
+cd ppmanager
 
 # Im Browser öffnen
 open index.html
@@ -28,20 +28,20 @@ open index.html
 ### Option 2: Web-Deployment
 
 #### Netlify (Empfohlen)
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/yourusername/property-manager)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/Gnadulf/ppmanager)
 
 1. Button klicken
 2. GitHub verbinden
 3. Automatisch deployen
 
 #### Vercel
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/yourusername/property-manager)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Gnadulf/ppmanager)
 
 #### GitHub Pages
 ```bash
 # In Repository Settings
 # Pages > Source: main branch
-# URL: https://username.github.io/property-manager
+# URL: https://Gnadulf.github.io/ppmanager
 ```
 
 ### Option 3: Docker
