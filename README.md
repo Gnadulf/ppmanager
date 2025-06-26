@@ -90,6 +90,14 @@ cp .env.example .env
 - Regelmäßige Backups über Export-Funktion
 - Optional: Verschlüsselte Supabase-Synchronisation
 
+## Security Checks
+
+This project uses GitHub Actions for automated security scanning:
+- No eval() usage
+- XSS prevention via escapeHtml
+- No hardcoded credentials
+- Performance monitoring
+
 ## 🔄 Updates
 
 ### Automatische Updates (PWA)

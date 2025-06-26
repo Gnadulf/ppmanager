@@ -1,0 +1,52 @@
+name: Security Check Only
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  security-audit:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: 🔒 Security Scan
+      run: |
+        echo "Starting security audit..."
+        
+        # Check 1: eval() usage
+        if grep -q "eval(" index.html; then
+          echo "❌ FAIL: eval() found - potential security risk"
+          exit 1
+        fi
+        echo "✓ No eval() usage found"
+        
+        # Check 2: innerHTML without escaping
+        if grep -q "innerHTML\s*=" index.html && ! grep -q "escapeHtml" index.html; then
+          echo "❌ FAIL: innerHTML used without escapeHtml"
+          exit 1
+        fi
+        echo "✓ XSS protection via escapeHtml present"
+        
+        # Check 3: Hardcoded credentials
+        if grep -qE "(SUPABASE_URL|SUPABASE_ANON_KEY|api_key|password|secret)" supabase-config.js 2>/dev/null; then
+          echo "⚠️ WARNING: Credentials found in supabase-config.js (should use env vars)"
+        fi
+        if grep -qE "https://.*supabase\.co|eyJ[A-Za-z0-9+/=]+" index.html; then
+          echo "❌ FAIL: Hardcoded Supabase credentials in index.html"
+          exit 1
+        fi
+        echo "✓ No hardcoded credentials in index.html"
+        
+        # Check 4: File size (performance)
+        size=$(stat -c%s index.html 2>/dev/null || stat -f%z index.html)
+        if [ $size -gt 5242880 ]; then
+          echo "⚠️ WARNING: index.html larger than 5MB ($size bytes)"
+        else
+          echo "✓ File size OK: $size bytes"
+        fi
+        
+        echo "✅ All security checks passed!"
