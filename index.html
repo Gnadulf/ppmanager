@@ -1584,6 +1584,245 @@
                 display: none !important;
             }
         }
+        
+        /* Notes Styles */
+        .notes-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .notes-header {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .notes-search {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #e5e5e7;
+            border-radius: var(--radius-small);
+            font-size: 14px;
+            background: white;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+        
+        .notes-filters {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid #e5e5e7;
+            border-radius: var(--radius-small);
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+        }
+        
+        .notes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .note-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow-light);
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .note-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+        
+        .note-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary);
+        }
+        
+        .note-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 10px;
+        }
+        
+        .note-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--gray-dark);
+            margin-bottom: 5px;
+            flex: 1;
+        }
+        
+        .note-actions {
+            display: flex;
+            gap: 5px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .note-card:hover .note-actions {
+            opacity: 1;
+        }
+        
+        .note-action-btn {
+            padding: 5px 8px;
+            background: var(--gray-light);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .note-action-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .note-action-btn.delete:hover {
+            background: var(--danger);
+        }
+        
+        .note-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .note-building {
+            background: var(--primary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+        
+        .note-date {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .note-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .note-tag {
+            background: var(--gray-light);
+            color: #666;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+        }
+        
+        .note-content {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #333;
+            max-height: 150px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .note-content::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background: linear-gradient(to bottom, transparent, white);
+        }
+        
+        /* Markdown styles for notes */
+        .note-content h1, .note-content h2, .note-content h3 {
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+        
+        .note-content h1 { font-size: 1.2em; }
+        .note-content h2 { font-size: 1.1em; }
+        .note-content h3 { font-size: 1em; }
+        
+        .note-content ul, .note-content ol {
+            margin-left: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .note-content p {
+            margin-bottom: 8px;
+        }
+        
+        .note-content code {
+            background: var(--gray-light);
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+        
+        .note-content blockquote {
+            border-left: 4px solid var(--primary);
+            padding-left: 15px;
+            margin: 10px 0;
+            color: #666;
+        }
+        
+        /* Note form specific styles */
+        #noteContent {
+            font-family: monospace;
+            resize: vertical;
+        }
+        
+        /* Empty state for notes */
+        .notes-empty {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .notes-empty-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        
+        .notes-empty-text {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
@@ -1609,6 +1848,10 @@
             <span class="mobile-nav-icon">💰</span>
             <span class="mobile-nav-label">Budget</span>
         </button>
+        <button class="mobile-nav-item" data-view="notes">
+            <span class="mobile-nav-icon">📝</span>
+            <span class="mobile-nav-label">Notizen</span>
+        </button>
     </nav>
     
     <!-- Pull to Refresh indicator -->
@@ -1626,6 +1869,7 @@
                 <button class="view-tab" data-view="contractors">Dienstleister</button>
                 <button class="view-tab" data-view="budget">Budget</button>
                 <button class="view-tab" data-view="docs">Dokumente</button>
+                <button class="view-tab" data-view="notes">Notizen</button>
                 <button class="view-tab" data-view="wiki">Wiki</button>
             </div>
             <div id="syncStatus" class="sync-status offline">
@@ -1728,6 +1972,39 @@
         </div>
     </div>
     
+    <!-- Notes View -->
+    <div id="notesView" class="view-content" style="display: none;">
+        <div class="notes-container">
+            <div class="notes-header">
+                <div class="notes-search">
+                    <input type="text" id="notesSearch" placeholder="🔍 Notizen durchsuchen..." class="search-input">
+                </div>
+                <div class="notes-filters">
+                    <button class="filter-btn active" data-filter="all" onclick="app.setNotesFilter('all')">Alle</button>
+                    <button class="filter-btn" data-filter="recent" onclick="app.setNotesFilter('recent')">Aktuell</button>
+                    <button class="filter-btn" data-filter="tagged" onclick="app.setNotesFilter('tagged')">Mit Tags</button>
+                    <select id="notesBuilding" class="filter-select" onchange="app.filterNotes()">
+                        <option value="all">Alle Gebäude</option>
+                        <option value="KDW17">KDW17</option>
+                        <option value="KDW11">KDW11</option>
+                        <option value="EC450">EC450</option>
+                        <option value="EC362">EC362</option>
+                        <option value="S28">S28</option>
+                        <option value="TH">TH</option>
+                        <option value="Schwimmbad">Schwimmbad</option>
+                        <option value="Zentrale">Zentrale</option>
+                        <option value="Gästewohnung">Gästewohnung</option>
+                        <option value="Schmalenbecker Str">Schmalenbecker Str</option>
+                        <option value="Felbrunnenstr">Felbrunnenstr.</option>
+                        <option value="HIS">HIS</option>
+                    </select>
+                </div>
+                <button class="btn-primary" onclick="app.openModal('noteModal')">📝 Neue Notiz</button>
+            </div>
+            <div class="notes-grid" id="notesGrid"></div>
+        </div>
+    </div>
+    
     <!-- Floating Action Button -->
     <button class="fab" id="fabButton">+</button>
     <div class="fab-menu" id="fabMenu">
@@ -1735,6 +2012,7 @@
         <div class="fab-option" data-action="project">🏗️ Neues Projekt</div>
         <div class="fab-option" data-action="contractor">👷 Dienstleister hinzufügen</div>
         <div class="fab-option" data-action="doc">📄 Dokument hochladen</div>
+        <div class="fab-option" data-action="note">📝 Neue Notiz</div>
         <div class="fab-option" data-action="export">💾 Daten exportieren</div>
     </div>
     
@@ -1959,6 +2237,62 @@
         </div>
     </div>
     
+    <!-- Note Modal -->
+    <div class="form-modal" id="noteModal">
+        <div class="form-content">
+            <div class="form-header">
+                <h2 id="noteModalTitle">Neue Notiz</h2>
+                <button class="close-btn" data-modal="noteModal">&times;</button>
+            </div>
+            <form id="noteForm" class="form-grid">
+                <input type="hidden" id="noteId" />
+                <div class="form-group">
+                    <label for="noteTitle">Titel *</label>
+                    <input type="text" id="noteTitle" required placeholder="z.B. Wartung Heizung">
+                </div>
+                
+                <div class="form-group">
+                    <label for="noteBuilding">Gebäude</label>
+                    <select id="noteBuilding">
+                        <option value="">Allgemeine Notiz</option>
+                        <option value="KDW17">KDW17</option>
+                        <option value="KDW11">KDW11</option>
+                        <option value="EC450">EC450</option>
+                        <option value="EC362">EC362</option>
+                        <option value="S28">S28</option>
+                        <option value="TH">TH</option>
+                        <option value="Schwimmbad">Schwimmbad</option>
+                        <option value="Zentrale">Zentrale</option>
+                        <option value="Gästewohnung">Gästewohnung</option>
+                        <option value="Schmalenbecker Str">Schmalenbecker Str</option>
+                        <option value="Felbrunnenstr">Felbrunnenstr.</option>
+                        <option value="HIS">HIS</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="noteTags">Tags (kommagetrennt)</label>
+                    <input type="text" id="noteTags" placeholder="z.B. Wartung, Heizung, Wichtig">
+                </div>
+                
+                <div class="form-group">
+                    <label for="noteContent">Inhalt * (Markdown unterstützt)</label>
+                    <textarea id="noteContent" rows="10" required placeholder="# Überschrift
+
+- Punkt 1
+- Punkt 2
+
+**Fett** und *kursiv* sind möglich"></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="app.closeModal('noteModal')">Abbrechen</button>
+                    <button type="submit" class="btn-primary">Speichern</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
     <div class="notification" id="notification"></div>
     
     <script>
@@ -1970,10 +2304,13 @@
                     projects: [],
                     contractors: [],
                     documents: [],
+                    notes: [],
                     currentView: 'tasks',
                     currentFilter: 'all',
                     wikiUserType: 'all',
-                    currentWikiCategory: 'verkehrssicherung'
+                    currentWikiCategory: 'verkehrssicherung',
+                    currentNotesFilter: 'all',
+                    notesSearchQuery: ''
                 };
                 
                 // Make instance globally available
@@ -2017,6 +2354,7 @@
                     this.state.projects = JSON.parse(localStorage.getItem('propertyProjects') || '[]');
                     this.state.contractors = JSON.parse(localStorage.getItem('propertyContractors') || '[]');
                     this.state.documents = JSON.parse(localStorage.getItem('propertyDocuments') || '[]');
+                    this.state.notes = JSON.parse(localStorage.getItem('propertyNotes') || '[]');
                 } catch (error) {
                     console.error('Error loading data:', error);
                     this.showNotification('Fehler beim Laden der Daten', 'error');
@@ -2029,6 +2367,7 @@
                     localStorage.setItem('propertyProjects', JSON.stringify(this.state.projects));
                     localStorage.setItem('propertyContractors', JSON.stringify(this.state.contractors));
                     localStorage.setItem('propertyDocuments', JSON.stringify(this.state.documents));
+                    localStorage.setItem('propertyNotes', JSON.stringify(this.state.notes));
                     
                     // Trigger sync if available
                     if (this.syncManager && navigator.onLine) {
@@ -2085,6 +2424,13 @@
                 document.getElementById('taskForm').addEventListener('submit', (e) => this.handleTaskSubmit(e));
                 document.getElementById('projectForm').addEventListener('submit', (e) => this.handleProjectSubmit(e));
                 document.getElementById('contractorForm').addEventListener('submit', (e) => this.handleContractorSubmit(e));
+                document.getElementById('noteForm').addEventListener('submit', (e) => this.handleNoteSubmit(e));
+                
+                // Notes search
+                document.getElementById('notesSearch').addEventListener('input', (e) => {
+                    this.state.notesSearchQuery = e.target.value;
+                    this.renderNotes();
+                });
                 
                 // Modal close buttons
                 document.querySelectorAll('.close-btn, .secondary-btn[data-modal]').forEach(btn => {
@@ -2177,6 +2523,9 @@
                             break;
                         case 'wiki':
                             this.renderWiki();
+                            break;
+                        case 'notes':
+                            this.renderNotes();
                             break;
                     }
                 } catch (error) {
@@ -2354,6 +2703,7 @@
                         if (task) {
                             task.status = newStatus;
                             task.completed = newStatus === 'done';
+                            task.updated_at = new Date().toISOString();
                             this.saveData();
                             this.render();
                         }
@@ -2861,6 +3211,7 @@
                 const task = this.state.tasks.find(t => t.id === taskId);
                 if (task) {
                     task.completed = !task.completed;
+                    task.updated_at = new Date().toISOString();
                     this.saveData();
                     this.render();
                 }
@@ -2886,7 +3237,8 @@
                     description: form.taskDescription.value,
                     completed: false,
                     status: 'todo',
-                    createdAt: new Date().toISOString()
+                    createdAt: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
                 };
                 
                 this.state.tasks.push(newTask);
@@ -2939,7 +3291,8 @@
                     budget: parseFloat(form.projectBudget.value) || 0,
                     milestones: milestones,
                     description: form.projectDescription.value,
-                    createdAt: new Date().toISOString()
+                    createdAt: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
                 };
                 
                 this.state.projects.push(newProject);
@@ -2954,6 +3307,7 @@
                 const project = this.state.projects.find(p => p.id === projectId);
                 if (project && project.milestones[milestoneIndex]) {
                     project.milestones[milestoneIndex].done = !project.milestones[milestoneIndex].done;
+                    project.updated_at = new Date().toISOString();
                     this.saveData();
                     this.render();
                 }
@@ -2984,7 +3338,8 @@
                     email: form.contractorEmail.value,
                     services: services,
                     notes: form.contractorNotes.value,
-                    createdAt: new Date().toISOString()
+                    createdAt: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
                 };
                 
                 this.state.contractors.push(newContractor);
@@ -3038,6 +3393,192 @@
                 this.renderWiki();
             }
             
+            // Notes Methods
+            renderNotes() {
+                const notesGrid = document.getElementById('notesGrid');
+                const filteredNotes = this.filterNotes();
+                
+                if (filteredNotes.length === 0) {
+                    notesGrid.innerHTML = `
+                        <div class="notes-empty">
+                            <div class="notes-empty-icon">📝</div>
+                            <div class="notes-empty-text">Keine Notizen gefunden</div>
+                            <button class="btn-primary" onclick="app.openModal('noteModal')">📝 Erste Notiz erstellen</button>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                notesGrid.innerHTML = filteredNotes.map(note => `
+                    <div class="note-card" onclick="app.editNote(${note.id})">
+                        <div class="note-header">
+                            <div class="note-title">${this.escapeHtml(note.title)}</div>
+                            <div class="note-actions">
+                                <button class="note-action-btn" onclick="event.stopPropagation(); app.editNote(${note.id})">✏️</button>
+                                <button class="note-action-btn delete" onclick="event.stopPropagation(); app.deleteNote(${note.id})">🗑️</button>
+                            </div>
+                        </div>
+                        <div class="note-meta">
+                            ${note.building ? `<span class="note-building">${this.escapeHtml(note.building)}</span>` : ''}
+                            <span class="note-date">📅 ${this.formatDate(note.createdAt)}</span>
+                        </div>
+                        ${note.tags && note.tags.length > 0 ? `
+                            <div class="note-tags">
+                                ${note.tags.map(tag => `<span class="note-tag">${this.escapeHtml(tag)}</span>`).join('')}
+                            </div>
+                        ` : ''}
+                        <div class="note-content">
+                            ${this.renderMarkdown(note.content)}
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            filterNotes() {
+                let notes = [...this.state.notes];
+                
+                // Search filter
+                if (this.state.notesSearchQuery) {
+                    const query = this.state.notesSearchQuery.toLowerCase();
+                    notes = notes.filter(note => 
+                        note.title.toLowerCase().includes(query) ||
+                        note.content.toLowerCase().includes(query) ||
+                        (note.tags && note.tags.some(tag => tag.toLowerCase().includes(query)))
+                    );
+                }
+                
+                // Building filter
+                const buildingFilter = document.getElementById('notesBuilding')?.value;
+                if (buildingFilter && buildingFilter !== 'all') {
+                    notes = notes.filter(note => note.building === buildingFilter);
+                }
+                
+                // Type filter
+                if (this.state.currentNotesFilter === 'recent') {
+                    const thirtyDaysAgo = new Date();
+                    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+                    notes = notes.filter(note => new Date(note.updatedAt || note.createdAt) > thirtyDaysAgo);
+                } else if (this.state.currentNotesFilter === 'tagged') {
+                    notes = notes.filter(note => note.tags && note.tags.length > 0);
+                }
+                
+                // Sort by updated/created date (newest first)
+                notes.sort((a, b) => new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt));
+                
+                return notes;
+            }
+            
+            setNotesFilter(filter) {
+                this.state.currentNotesFilter = filter;
+                
+                // Update filter buttons
+                document.querySelectorAll('.notes-filters .filter-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.filter === filter);
+                });
+                
+                this.renderNotes();
+            }
+            
+            handleNoteSubmit(e) {
+                e.preventDefault();
+                
+                const form = e.target;
+                const noteId = form.noteId.value;
+                const tagsInput = form.noteTags.value;
+                const tags = tagsInput ? tagsInput.split(',').map(t => t.trim()).filter(t => t) : [];
+                
+                const noteData = {
+                    title: form.noteTitle.value,
+                    content: form.noteContent.value,
+                    building: form.noteBuilding.value,
+                    tags: tags,
+                    updatedAt: new Date().toISOString()
+                };
+                
+                if (noteId) {
+                    // Edit existing note
+                    const index = this.state.notes.findIndex(n => n.id == noteId);
+                    if (index !== -1) {
+                        this.state.notes[index] = { ...this.state.notes[index], ...noteData };
+                        this.showNotification('Notiz erfolgreich aktualisiert');
+                    }
+                } else {
+                    // Create new note
+                    const newNote = {
+                        id: Date.now(),
+                        ...noteData,
+                        createdAt: new Date().toISOString()
+                    };
+                    this.state.notes.push(newNote);
+                    this.showNotification('Notiz erfolgreich erstellt');
+                }
+                
+                this.saveData();
+                this.closeModal('noteModal');
+                form.reset();
+                this.render();
+            }
+            
+            editNote(noteId) {
+                const note = this.state.notes.find(n => n.id === noteId);
+                if (!note) return;
+                
+                // Fill form with note data
+                document.getElementById('noteModalTitle').textContent = 'Notiz bearbeiten';
+                document.getElementById('noteId').value = note.id;
+                document.getElementById('noteTitle').value = note.title;
+                document.getElementById('noteContent').value = note.content;
+                document.getElementById('noteBuilding').value = note.building || '';
+                document.getElementById('noteTags').value = note.tags ? note.tags.join(', ') : '';
+                
+                this.openModal('noteModal');
+            }
+            
+            deleteNote(noteId) {
+                if (confirm('Möchten Sie diese Notiz wirklich löschen?')) {
+                    this.state.notes = this.state.notes.filter(n => n.id !== noteId);
+                    this.saveData();
+                    this.render();
+                    this.showNotification('Notiz erfolgreich gelöscht');
+                }
+            }
+            
+            renderMarkdown(text) {
+                if (!text) return '';
+                
+                // Simple markdown parser
+                let html = this.escapeHtml(text);
+                
+                // Headers
+                html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+                html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+                html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+                
+                // Bold and italic
+                html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+                html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+                
+                // Lists
+                html = html.replace(/^\* (.+)$/gm, '<li>$1</li>');
+                html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+                html = html.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
+                
+                // Code
+                html = html.replace(/`(.+?)`/g, '<code>$1</code>');
+                
+                // Blockquote
+                html = html.replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>');
+                
+                // Line breaks
+                html = html.replace(/\n/g, '<br>');
+                
+                // Paragraphs
+                html = html.replace(/<br><br>/g, '</p><p>');
+                html = '<p>' + html + '</p>';
+                
+                return html;
+            }
+            
             // UI Helper Methods
             toggleFabMenu() {
                 const fabMenu = document.getElementById('fabMenu');
@@ -3060,6 +3601,9 @@
                     case 'doc':
                         this.showNotification('Dokumenten-Upload wird in Kürze verfügbar sein');
                         break;
+                    case 'note':
+                        this.openModal('noteModal');
+                        break;
                     case 'export':
                         this.exportData();
                         break;
@@ -3071,6 +3615,11 @@
                 if (modal) {
                     modal.style.display = 'block';
                     this.updateContractorSelect();
+                    
+                    // Reset note modal for new note
+                    if (modalId === 'noteModal' && !document.getElementById('noteId').value) {
+                        document.getElementById('noteModalTitle').textContent = 'Neue Notiz';
+                    }
                 }
             }
             
@@ -3301,215 +3850,7 @@
 
     <!-- Supabase Integration -->
     <script>
-        // Supabase Sync Manager
-        const syncManager = {
-            syncInProgress: false,
-            userId: null,
-            autoSyncInterval: null,
-            
-            async init() {
-                try {
-                    // Initialize Supabase client
-                    const supabase = window.supabase.createClient(
-                        SUPABASE_CONFIG.url,
-                        SUPABASE_CONFIG.anonKey
-                    );
-
-                    // Try to get existing session
-                    const { data: { session } } = await supabase.auth.getSession();
-                    
-                    if (session) {
-                        this.userId = session.user.id;
-                        // Existing session found
-                    } else {
-                        // Anonymous sign-in
-                        const { data, error } = await supabase.auth.signInAnonymously();
-                        if (error) throw error;
-                        this.userId = data.user.id;
-                        // New anonymous session created
-                    }
-                    
-                    // Store supabase client for later use
-                    this.supabase = supabase;
-                    
-                    // Initial sync
-                    await this.sync();
-                    
-                    // Auto-sync every 30 seconds
-                    this.autoSyncInterval = setInterval(() => this.sync(), 30000);
-                    
-                    // Sync on changes
-                    this.setupChangeListeners();
-                    
-                    // Add sync button to UI
-                    this.addSyncButton();
-                    this.showSyncStatus('✅ Cloud-Sync aktiv');
-                    
-                    return true;
-                } catch (error) {
-                    console.error('Supabase error:', error);
-                    this.showSyncStatus('❌ Cloud-Sync nicht verfügbar', 'error');
-                    return false;
-                }
-            },
-            
-            async sync() {
-                if (this.syncInProgress) return;
-                
-                // Show sync indicator
-                this.showSyncIndicator(true);
-                
-                try {
-                    await this.pullData();
-                    await this.pushData();
-                    this.showSyncStatus('✅ Synchronisiert');
-                } catch (error) {
-                    console.error('Sync error:', error);
-                    this.showSyncStatus('❌ Sync fehlgeschlagen', 'error');
-                } finally {
-                    this.showSyncIndicator(false);
-                }
-            },
-            
-            async pullData() {
-                this.syncInProgress = true;
-                
-                try {
-                    // Fetch tasks
-                    const { data: tasks, error: tasksError } = await this.supabase
-                        .from('tasks')
-                        .select('*')
-                        .eq('user_id', this.userId)
-                        .order('deadline', { ascending: true });
-                    
-                    if (tasksError) throw tasksError;
-                    
-                    // Fetch projects
-                    const { data: projects, error: projectsError } = await this.supabase
-                        .from('projects')
-                        .select('*')
-                        .eq('user_id', this.userId)
-                        .order('start_date', { ascending: true });
-                    
-                    if (projectsError) throw projectsError;
-                    
-                    // Fetch contractors
-                    const { data: contractors, error: contractorsError } = await this.supabase
-                        .from('contractors')
-                        .select('*')
-                        .eq('user_id', this.userId)
-                        .order('name', { ascending: true });
-                    
-                    if (contractorsError) throw contractorsError;
-                    
-                    // Update app state if data exists
-                    if (window.app && tasks && projects && contractors) {
-                        window.app.state.tasks = tasks;
-                        window.app.state.projects = projects;
-                        window.app.state.contractors = contractors;
-                        window.app.saveState();
-                        window.app.render();
-                    }
-                    
-                } finally {
-                    this.syncInProgress = false;
-                }
-            },
-            
-            async pushData() {
-                if (this.syncInProgress || !window.app) return;
-                this.syncInProgress = true;
-                
-                try {
-                    const { tasks, projects, contractors } = window.app.state;
-                    
-                    // Upsert tasks
-                    if (tasks.length > 0) {
-                        const { error } = await this.supabase
-                            .from('tasks')
-                            .upsert(tasks.map(t => ({ ...t, user_id: this.userId })));
-                        if (error) throw error;
-                    }
-                    
-                    // Upsert projects
-                    if (projects.length > 0) {
-                        const { error } = await this.supabase
-                            .from('projects')
-                            .upsert(projects.map(p => ({ ...p, user_id: this.userId })));
-                        if (error) throw error;
-                    }
-                    
-                    // Upsert contractors
-                    if (contractors.length > 0) {
-                        const { error } = await this.supabase
-                            .from('contractors')
-                            .upsert(contractors.map(c => ({ ...c, user_id: this.userId })));
-                        if (error) throw error;
-                    }
-                    
-                } finally {
-                    this.syncInProgress = false;
-                }
-            },
-            
-            setupChangeListeners() {
-                // Extend original saveState method
-                if (window.app) {
-                    const originalSaveState = window.app.saveState.bind(window.app);
-                    window.app.saveState = function() {
-                        originalSaveState();
-                        // Debounced push after 2 seconds
-                        clearTimeout(syncManager.pushTimeout);
-                        syncManager.pushTimeout = setTimeout(() => {
-                            syncManager.pushData();
-                        }, 2000);
-                    };
-                }
-            },
-            
-            addSyncButton() {
-                const controls = document.querySelector('.controls');
-                if (controls && !document.getElementById('sync-button')) {
-                    const syncButton = document.createElement('button');
-                    syncButton.id = 'sync-button';
-                    syncButton.className = 'primary-button';
-                    syncButton.innerHTML = '🔄 Sync';
-                    syncButton.onclick = () => this.sync();
-                    syncButton.style.marginLeft = '10px';
-                    controls.appendChild(syncButton);
-                }
-            },
-            
-            showSyncIndicator(show) {
-                let indicator = document.getElementById('sync-indicator');
-                if (!indicator) {
-                    indicator = document.createElement('div');
-                    indicator.id = 'sync-indicator';
-                    indicator.style.cssText = `
-                        position: fixed;
-                        top: 20px;
-                        left: 50%;
-                        transform: translateX(-50%);
-                        background: rgba(0, 122, 255, 0.9);
-                        color: white;
-                        padding: 8px 16px;
-                        border-radius: 20px;
-                        font-size: 14px;
-                        z-index: 1000;
-                        display: none;
-                    `;
-                    indicator.textContent = '🔄 Synchronisiere...';
-                    document.body.appendChild(indicator);
-                }
-                indicator.style.display = show ? 'block' : 'none';
-            },
-            
-            showSyncStatus(message, type = 'success') {
-                if (window.app && window.app.showNotification) {
-                    window.app.showNotification(message);
-                }
-            }
-        };
+        // Old sync implementation removed - now using SyncManager from supabase-config.js
         
         // Initialize Supabase sync after app is ready
         document.addEventListener('DOMContentLoaded', () => {
@@ -3525,11 +3866,16 @@
                     
                     // Monitor online/offline status
                     window.addEventListener('online', () => {
-                        window.app.syncManager.updateSyncStatus('online');
+                        if (window.app.syncManager) {
+                            window.app.syncManager.updateSyncStatus('online');
+                            window.app.syncManager.syncAll();
+                        }
                     });
                     
                     window.addEventListener('offline', () => {
-                        window.app.syncManager.updateSyncStatus('offline');
+                        if (window.app.syncManager) {
+                            window.app.syncManager.updateSyncStatus('offline');
+                        }
                     });
                 }
             }, 1000);
