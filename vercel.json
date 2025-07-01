@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "outputDirectory": ".",
   "rewrites": [
     {
       "source": "/((?!.*\\.(js|json|png|jpg|css|ico|txt)).*)",

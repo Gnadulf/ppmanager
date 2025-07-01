@@ -1,12 +1,8 @@
 // Supabase Configuration
-// Use window variables injected by Vercel or fallback to hardcoded values
+// Use window variables injected by Vercel (no hardcoded values)
 const SUPABASE_CONFIG = {
-    url: (window.SUPABASE_URL && window.SUPABASE_URL !== '%NEXT_PUBLIC_SUPABASE_URL%') 
-         ? window.SUPABASE_URL 
-         : 'https://ezeltpwgrgakwwrpcwlu.supabase.co',
-    anonKey: (window.SUPABASE_ANON_KEY && window.SUPABASE_ANON_KEY !== '%NEXT_PUBLIC_SUPABASE_ANON_KEY%') 
-         ? window.SUPABASE_ANON_KEY 
-         : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV6ZWx0cHdncmdha3d3cnBjd2x1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA3ODU0MjksImV4cCI6MjA2NjM2MTQyOX0.IkdqizAdjEUKqqE2InLe0Jfy56q0lmqlgBfI9h8MaeE'
+    url: window.SUPABASE_URL || '',
+    anonKey: window.SUPABASE_ANON_KEY || ''
 };
 
 // Initialize Supabase client

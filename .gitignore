@@ -12,7 +12,7 @@ yarn-error.log*
 .env.test.local
 
 # Supabase credentials
-supabase-config.js
+# supabase-config.js is needed for the app!
 
 # Backups
 backups/
