@@ -19,6 +19,13 @@
         // These will be replaced by Vercel during build
         window.SUPABASE_URL = '%NEXT_PUBLIC_SUPABASE_URL%';
         window.SUPABASE_ANON_KEY = '%NEXT_PUBLIC_SUPABASE_ANON_KEY%';
+        
+        // Fallback for development/testing
+        if (window.SUPABASE_URL === '%NEXT_PUBLIC_SUPABASE_URL%') {
+            window.SUPABASE_URL = 'https://ezeltpwgrgakwwrpcwlu.supabase.co';
+            window.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV6ZWx0cHdncmdha3d3cnBjd2x1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA3ODU0MjksImV4cCI6MjA2NjM2MTQyOX0.IkdqizAdjEUKqqE2InLe0Jfy56q0lmqlgBfI9h8MaeE';
+            console.log('Using fallback Supabase credentials');
+        }
     </script>
     
     <script src="supabase-config.js"></script>

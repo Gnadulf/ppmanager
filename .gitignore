@@ -51,6 +51,10 @@ tmp/
 temp/
 .cache/
 
+# Keep sync alternatives local for now
+github-sync.js
+firebase-sync.js
+
 # User uploads (falls implementiert)
 uploads/
 documents/

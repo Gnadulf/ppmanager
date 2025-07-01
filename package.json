@@ -5,7 +5,7 @@
   "main": "index.html",
   "scripts": {
     "start": "python -m http.server 8000",
-    "build": "echo 'No build needed for static site'",
+    "build": "echo 'No build needed - using static files'",
     "deploy": "npm run build"
   },
   "keywords": [
