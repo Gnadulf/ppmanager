@@ -37,15 +37,28 @@ This document tracks all development phases, bugs, features, and deployment stat
   - [x] Configure environment variables for Vercel
   - Priority: CRITICAL - Multi-device sync now implemented
 
+### 🔒 Security Fixes (July 1, 2025)
+- [x] **Remove ALL hardcoded credentials** ✅
+  - [x] Fixed index.html (lines 24-28)
+  - [x] Fixed supabase-config.js (removed hardcoded URL & key)
+  - [x] GitHub Actions security check now passes
+  - Priority: CRITICAL - Security vulnerability fixed
+
+- [x] **Fix Vercel deployment configuration** ✅
+  - [x] Added outputDirectory: "." to vercel.json
+  - [x] Fixed rewrites to properly serve JS/JSON files
+  - [x] Added security headers (CSP, X-Frame-Options)
+  - Priority: CRITICAL - Deployment was failing
+
 ### Deployment Steps
-- [ ] **Vercel deployment**
-  - [ ] Initialize git repository
-  - [ ] Create GitHub repository
-  - [ ] Connect Vercel to GitHub
-  - [ ] Set environment variables:
+- [x] **Vercel deployment** ✅
+  - [x] Initialize git repository ✅
+  - [x] Create GitHub repository ✅ (github.com/Gnadulf/ppmanager)
+  - [x] Connect Vercel to GitHub ✅
+  - [ ] Set environment variables: ⚠️ REQUIRED
     - `NEXT_PUBLIC_SUPABASE_URL`
     - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-  - [ ] Deploy to production
+  - [ ] Deploy to production (waiting for env vars)
 
 ### Field Testing Checklist
 - [ ] **iOS Testing**
@@ -126,7 +139,7 @@ This document tracks all development phases, bugs, features, and deployment stat
 - [ ] Implement LocalStorage encryption for sensitive data
 - [ ] Add data sanitization for all inputs
 - [ ] Implement CSP headers in vercel.json
-- [ ] Remove all console.log statements
+- [ ] Remove all console.log statements (7 JS files affected)
 - [ ] Add audit logging for data changes
 
 ### Sync & Conflict Resolution
