@@ -128,3 +128,59 @@ CREATE TABLE activity_log (
     changes JSONB,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
+
+-- Enable RLS for optional tables
+ALTER TABLE task_shares ENABLE ROW LEVEL SECURITY;
+ALTER TABLE activity_log ENABLE ROW LEVEL SECURITY;
+
+-- RLS Policies for task_shares
+CREATE POLICY "Task owners can create shares" 
+    ON task_shares FOR INSERT 
+    WITH CHECK (
+        EXISTS (
+            SELECT 1 FROM tasks 
+            WHERE tasks.id = task_shares.task_id 
+            AND tasks.user_id = auth.uid()
+        )
+    );
+
+CREATE POLICY "View task shares" 
+    ON task_shares FOR SELECT 
+    USING (
+        EXISTS (
+            SELECT 1 FROM tasks 
+            WHERE tasks.id = task_shares.task_id 
+            AND tasks.user_id = auth.uid()
+        )
+        OR 
+        shared_with_email = (SELECT email FROM auth.users WHERE id = auth.uid())
+    );
+
+CREATE POLICY "Task owners can update shares" 
+    ON task_shares FOR UPDATE 
+    USING (
+        EXISTS (
+            SELECT 1 FROM tasks 
+            WHERE tasks.id = task_shares.task_id 
+            AND tasks.user_id = auth.uid()
+        )
+    );
+
+CREATE POLICY "Task owners can delete shares" 
+    ON task_shares FOR DELETE 
+    USING (
+        EXISTS (
+            SELECT 1 FROM tasks 
+            WHERE tasks.id = task_shares.task_id 
+            AND tasks.user_id = auth.uid()
+        )
+    );
+
+-- RLS Policies for activity_log
+CREATE POLICY "Users can view own activity" 
+    ON activity_log FOR SELECT 
+    USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert own activity" 
+    ON activity_log FOR INSERT 
+    WITH CHECK (auth.uid() = user_id);
