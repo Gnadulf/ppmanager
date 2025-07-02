@@ -1,9 +1,14 @@
 {
   "version": 2,
   "outputDirectory": ".",
+  "functions": {
+    "api/env.js": {
+      "runtime": "@vercel/node@3"
+    }
+  },
   "rewrites": [
     {
-      "source": "/((?!.*\\.(js|json|png|jpg|css|ico|txt)).*)",
+      "source": "/((?!.*\\.(js|json|png|jpg|css|ico|txt)|api/.*).*)",
       "destination": "/index.html"
     }
   ],

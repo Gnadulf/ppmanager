@@ -14,20 +14,8 @@
     <!-- Supabase Client Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
-    <!-- Environment Variables Injection (for Vercel) -->
-    <script>
-        // These will be replaced by Vercel during build
-        window.SUPABASE_URL = '%NEXT_PUBLIC_SUPABASE_URL%';
-        window.SUPABASE_ANON_KEY = '%NEXT_PUBLIC_SUPABASE_ANON_KEY%';
-        
-        // Check if environment variables are properly set
-        if (window.SUPABASE_URL === '%NEXT_PUBLIC_SUPABASE_URL%' || !window.SUPABASE_URL) {
-            console.warn('⚠️ Supabase environment variables not configured');
-            console.warn('Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in Vercel');
-            // App will run in offline mode without sync
-        }
-    </script>
-    
+    <!-- Environment Variables Injection via Vercel Edge Function -->
+    <script src="/api/env.js"></script>
     <script src="supabase-config.js"></script>
     <style>
         /* Reset & Base Styles */
