@@ -50,6 +50,19 @@ This document tracks all development phases, bugs, features, and deployment stat
   - [x] Added security headers (CSP, X-Frame-Options)
   - Priority: CRITICAL - Deployment was failing
 
+### 🔧 Deployment Fixes (July 2, 2025)
+- [x] **Fix MIME type errors** ✅
+  - [x] JS files served as text/html instead of application/javascript
+  - [x] Switched from deprecated 'routes' to 'rewrites'
+  - [x] Added explicit Content-Type headers for JS files
+  - Priority: CRITICAL - App couldn't load
+
+- [x] **Override Vercel Dashboard settings** ✅
+  - [x] Added explicit buildCommand: "" (empty string)
+  - [x] Set framework: null to prevent auto-detection
+  - [x] Force static file serving without build process
+  - Priority: CRITICAL - Build kept failing with schema errors
+
 ### Deployment Steps
 - [x] **Vercel deployment** ✅
   - [x] Initialize git repository ✅
