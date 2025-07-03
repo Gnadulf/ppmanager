@@ -8,17 +8,30 @@
   },
   "rewrites": [
     {
-      "source": "/((?!.*\\.(js|json|png|jpg|css|ico|txt)|api/.*).*)",
+      "source": "/((?!api/|.*\\.(js|json|png|jpg|jpeg|gif|css|ico|txt|xml|webmanifest)).*)",
       "destination": "/index.html"
     }
   ],
   "headers": [
+    {
+      "source": "/(.*\\.js)",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/javascript"
+        }
+      ]
+    },
     {
       "source": "/service-worker.js",
       "headers": [
         {
           "key": "cache-control",
           "value": "public, max-age=0, must-revalidate"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/javascript"
         }
       ]
     },
