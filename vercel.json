@@ -7,10 +7,15 @@
       "runtime": "@vercel/node@3"
     }
   },
-  "rewrites": [
+  "routes": [
+    { "handle": "filesystem" },
     {
-      "source": "/:path((?!api/)(?!.*\\.\\w+$).*)",
-      "destination": "/index.html"
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ],
   "headers": [
