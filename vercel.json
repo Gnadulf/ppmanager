@@ -6,15 +6,16 @@
       "runtime": "@vercel/node@3"
     }
   },
-  "routes": [
-    { "handle": "filesystem" },
+  "cleanUrls": false,
+  "trailingSlash": false,
+  "rewrites": [
     {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
     },
     {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/((?!api|.*\\.(js|mjs|jsx|ts|tsx|css|json|ico|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot|webmanifest|xml|txt|md)).*)",
+      "destination": "/index.html"
     }
   ],
   "headers": [
@@ -23,7 +24,7 @@
       "headers": [
         {
           "key": "Content-Type",
-          "value": "application/javascript; charset=utf-8"
+          "value": "application/javascript"
         },
         {
           "key": "Cache-Control",
@@ -36,7 +37,7 @@
       "headers": [
         {
           "key": "Content-Type",
-          "value": "application/javascript; charset=utf-8"
+          "value": "application/javascript"
         },
         {
           "key": "Cache-Control",
