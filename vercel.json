@@ -1,6 +1,10 @@
 {
   "version": 2,
   "outputDirectory": ".",
+  "buildCommand": "",
+  "installCommand": "",
+  "devCommand": "",
+  "framework": null,
   "functions": {
     "api/env.js": {
       "runtime": "@vercel/node@3"
