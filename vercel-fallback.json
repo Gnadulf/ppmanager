@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "outputDirectory": ".",
+  "cleanUrls": false,
+  "trailingSlash": false,
+  "functions": {
+    "api/env.js": {
+      "runtime": "@vercel/node@3"
+    }
+  }
+}
