@@ -1,7 +1,7 @@
 {
   "version": 2,
   "outputDirectory": ".",
-  "buildCommand": "",
+  "buildCommand": "node build-env.js",
   "installCommand": "",
   "devCommand": "",
   "framework": null,

@@ -10,6 +10,7 @@ yarn-error.log*
 .env.production.local
 .env.development.local
 .env.test.local
+env-config.js
 
 # Supabase credentials
 # supabase-config.js is needed for the app!

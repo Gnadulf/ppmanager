@@ -1,9 +1,19 @@
-// Supabase Configuration
-// Use window variables injected by Vercel (no hardcoded values)
-const SUPABASE_CONFIG = {
-    url: window.SUPABASE_URL || '',
-    anonKey: window.SUPABASE_ANON_KEY || ''
+// Supabase Configuration with Retry Logic
+// Wait for environment variables to be loaded
+let SUPABASE_CONFIG = {
+    url: '',
+    anonKey: ''
 };
+
+// Function to check and update config
+function updateSupabaseConfig() {
+    if (window.SUPABASE_URL && window.SUPABASE_ANON_KEY) {
+        SUPABASE_CONFIG.url = window.SUPABASE_URL;
+        SUPABASE_CONFIG.anonKey = window.SUPABASE_ANON_KEY;
+        return true;
+    }
+    return false;
+}
 
 // Initialize Supabase client
 let supabase = null;
@@ -18,26 +28,30 @@ console.log('🔍 Supabase Debug Info:', {
     supabaseVersion: window.supabase ? 'Loaded' : 'Not loaded'
 });
 
-if (typeof window !== 'undefined' && window.supabase && SUPABASE_CONFIG.url && SUPABASE_CONFIG.anonKey) {
-    try {
-        supabase = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey, {
-            auth: {
-                persistSession: true,
-                autoRefreshToken: true
-            }
-        });
-        console.log('Supabase client initialized successfully');
-    } catch (error) {
-        console.error('Failed to initialize Supabase:', error);
+// Try to initialize immediately if possible
+updateSupabaseConfig();
+
+function initializeSupabaseClient() {
+    if (typeof window !== 'undefined' && window.supabase && SUPABASE_CONFIG.url && SUPABASE_CONFIG.anonKey) {
+        try {
+            supabase = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey, {
+                auth: {
+                    persistSession: true,
+                    autoRefreshToken: true
+                }
+            });
+            console.log('✅ Supabase client initialized successfully');
+            return true;
+        } catch (error) {
+            console.error('Failed to initialize Supabase:', error);
+            return false;
+        }
     }
-} else {
-    console.warn('Supabase not initialized. Missing:', {
-        window: typeof window !== 'undefined',
-        supabaseLib: !!(window.supabase),
-        url: !!SUPABASE_CONFIG.url,
-        key: !!SUPABASE_CONFIG.anonKey
-    });
+    return false;
 }
+
+// Initial attempt
+initializeSupabaseClient();
 
 // Sync Manager Class
 class SyncManager {
@@ -49,13 +63,36 @@ class SyncManager {
         this.syncInterval = null;
         this.offlineChanges = JSON.parse(localStorage.getItem('offlineChanges') || '[]');
         
-        // Initialize sync if Supabase is configured
-        if (supabase) {
+        // Initialize sync with retry mechanism
+        this.retryCount = 0;
+        this.maxRetries = 10;
+        this.retryDelay = 1000; // Start with 1 second
+        
+        this.attemptInitialization();
+    }
+    
+    attemptInitialization() {
+        // Update config and try to initialize
+        updateSupabaseConfig();
+        
+        if (initializeSupabaseClient() && supabase) {
+            console.log('✅ SyncManager: Supabase ready, initializing sync');
             this.initializeSync();
-        } else {
-            // Supabase not initialized - show offline status
+        } else if (this.retryCount < this.maxRetries) {
+            this.retryCount++;
+            console.log(`⏳ SyncManager: Waiting for credentials (attempt ${this.retryCount}/${this.maxRetries})`);
             this.updateSyncStatus('offline');
-            console.warn('Supabase not initialized. Using offline mode only.');
+            
+            // Retry with exponential backoff
+            setTimeout(() => {
+                this.attemptInitialization();
+            }, this.retryDelay);
+            
+            // Increase delay for next retry (max 10 seconds)
+            this.retryDelay = Math.min(this.retryDelay * 1.5, 10000);
+        } else {
+            console.warn('❌ SyncManager: Max retries reached. Running in offline mode.');
+            this.updateSyncStatus('offline');
         }
     }
     
