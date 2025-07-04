@@ -1,24 +1,15 @@
 {
   "version": 2,
   "outputDirectory": ".",
-  "buildCommand": "node build-env.js",
+  "buildCommand": "npm run build",
   "installCommand": "",
   "devCommand": "",
   "framework": null,
-  "functions": {
-    "api/env.js": {
-      "runtime": "@vercel/node@3"
-    }
-  },
   "cleanUrls": false,
   "trailingSlash": false,
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api/$1"
-    },
-    {
-      "source": "/((?!api|.*\\.(js|mjs|jsx|ts|tsx|css|json|ico|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot|webmanifest|xml|txt|md)).*)",
+      "source": "/((?!.*\\.(js|mjs|jsx|ts|tsx|css|json|ico|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot|webmanifest|xml|txt|md)).*)",
       "destination": "/index.html"
     }
   ],

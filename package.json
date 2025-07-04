@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node dev-server.js",
     "start:python": "python -m http.server 8000",
-    "build": "echo 'No build needed - using static files'",
+    "build": "node build-env.js",
     "deploy": "npm run build",
     "dev": "node dev-server.js"
   },
