@@ -61,8 +61,8 @@
             background: white;
             border-bottom: 1px solid #e5e5e7;
             position: sticky;
-            top: 0;
-            z-index: 100;
+            top: 72px; /* Below quick-add bar */
+            z-index: 99; /* Below quick-add bar */
             padding: 15px 20px;
         }
         
@@ -1822,8 +1822,315 @@
             margin-bottom: 20px;
         }
     </style>
+    <style>
+        /* Quick Add Bar - UX Revolution */
+        .quick-add-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.98), rgba(255,255,255,0.95));
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 200;
+            padding: 12px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .quick-add-container.hidden {
+            transform: translateY(-100%);
+        }
+        
+        .quick-add-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .quick-add-input {
+            flex: 1;
+            background: white;
+            border: 2px solid #e5e5e7;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+        
+        .quick-add-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0,122,255,0.1);
+            outline: none;
+        }
+        
+        .quick-add-hint {
+            font-size: 12px;
+            color: var(--gray-medium);
+            white-space: nowrap;
+        }
+        
+        .quick-add-examples {
+            position: absolute;
+            top: 100%;
+            left: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow-medium);
+            padding: 12px;
+            margin-top: 8px;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+        
+        .quick-add-input:focus + .quick-add-examples {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .example-item {
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .example-item:hover {
+            background: var(--gray-light);
+            color: var(--primary);
+        }
+        
+        .example-item code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        
+        /* Adjust body padding for quick-add bar */
+        body {
+            padding-top: 72px;
+        }
+        
+        /* Command Palette */
+        .command-palette {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 600px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            z-index: 300;
+            display: none;
+            overflow: hidden;
+        }
+        
+        .command-palette.show {
+            display: block;
+        }
+        
+        .command-input {
+            width: 100%;
+            padding: 20px;
+            border: none;
+            font-size: 18px;
+            outline: none;
+        }
+        
+        .command-results {
+            max-height: 400px;
+            overflow-y: auto;
+            border-top: 1px solid #e5e5e7;
+        }
+        
+        .command-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .command-item:hover,
+        .command-item.selected {
+            background: var(--gray-light);
+        }
+        
+        .command-icon {
+            font-size: 20px;
+        }
+        
+        .command-text {
+            flex: 1;
+        }
+        
+        .command-shortcut {
+            font-size: 12px;
+            color: var(--gray-medium);
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        
+        /* Keyboard Shortcuts Modal */
+        .shortcuts-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            z-index: 300;
+            display: none;
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        .shortcuts-modal.show {
+            display: block;
+        }
+        
+        .shortcuts-list {
+            display: grid;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        
+        .shortcut-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .shortcut-key {
+            background: #f0f0f0;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .quick-add-container {
+                padding: 8px 12px;
+            }
+            
+            .quick-add-hint {
+                display: none;
+            }
+            
+            .quick-add-input {
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+            
+            body {
+                padding-top: 60px;
+            }
+            
+            .app-header {
+                top: 60px; /* Adjusted for mobile */
+            }
+            
+            .quick-add-examples {
+                left: 12px;
+                right: 12px;
+            }
+        }
+    </style>
 </head>
 <body>
+    <!-- Quick Add Bar - Always Visible -->
+    <div class="quick-add-container" id="quickAddContainer">
+        <div class="quick-add-wrapper">
+            <input 
+                type="text" 
+                class="quick-add-input" 
+                id="quickAddInput"
+                placeholder="z.B: 'Heizung prüfen KDW17 hoch morgen' oder 'Fenster reparieren #wichtig @Mueller'"
+                autocomplete="off"
+            />
+            <div class="quick-add-examples">
+                <div class="example-item" onclick="app.setQuickAddExample('Heizung prüfen KDW17 hoch morgen')">
+                    <code>Heizung prüfen KDW17 hoch morgen</code> - Aufgabe mit Gebäude, Priorität und Datum
+                </div>
+                <div class="example-item" onclick="app.setQuickAddExample('Fenster reparieren #wichtig @Mueller')">
+                    <code>Fenster reparieren #wichtig @Mueller</code> - Mit Tags und Dienstleister
+                </div>
+                <div class="example-item" onclick="app.setQuickAddExample('Maler bestellen S28 !!')">
+                    <code>Maler bestellen S28 !!</code> - !! = hohe Priorität
+                </div>
+            </div>
+            <span class="quick-add-hint">↵ Erstellen | Tab Details | / Fokus | ? Hilfe</span>
+        </div>
+    </div>
+    
+    <!-- Command Palette -->
+    <div class="command-palette" id="commandPalette">
+        <input 
+            type="text" 
+            class="command-input" 
+            id="commandInput"
+            placeholder="Befehl eingeben..."
+        />
+        <div class="command-results" id="commandResults"></div>
+    </div>
+    
+    <!-- Keyboard Shortcuts Modal -->
+    <div class="shortcuts-modal" id="shortcutsModal">
+        <h2>⌨️ Tastatur-Shortcuts</h2>
+        <div class="shortcuts-list">
+            <div class="shortcut-item">
+                <span>Quick-Add fokussieren</span>
+                <span class="shortcut-key">/</span>
+            </div>
+            <div class="shortcut-item">
+                <span>Neue Aufgabe</span>
+                <span class="shortcut-key">n</span>
+            </div>
+            <div class="shortcut-item">
+                <span>Neues Projekt</span>
+                <span class="shortcut-key">p</span>
+            </div>
+            <div class="shortcut-item">
+                <span>Command Palette</span>
+                <span class="shortcut-key">⌘ K</span>
+            </div>
+            <div class="shortcut-item">
+                <span>Suchen</span>
+                <span class="shortcut-key">⌘ F</span>
+            </div>
+            <div class="shortcut-item">
+                <span>Zwischen Views wechseln</span>
+                <span class="shortcut-key">1-6</span>
+            </div>
+            <div class="shortcut-item">
+                <span>Hilfe/Shortcuts</span>
+                <span class="shortcut-key">?</span>
+            </div>
+            <div class="shortcut-item">
+                <span>Schließen/Abbrechen</span>
+                <span class="shortcut-key">ESC</span>
+            </div>
+        </div>
+        <button onclick="app.hideShortcuts()" style="margin-top: 20px; width: 100%;">Schließen</button>
+    </div>
+    
     <!-- Mobile Bottom Navigation -->
     <nav class="mobile-nav" id="mobileNav">
         <button class="mobile-nav-item active" data-view="tasks">
@@ -2453,6 +2760,12 @@
                     document.querySelectorAll('.wiki-type-btn').forEach(btn => {
                         btn.addEventListener('click', (e) => this.setWikiUserType(e.target.dataset.type));
                     });
+                    
+                    // Initialize Quick-Add System
+                    this.setupQuickAdd();
+                    
+                    // Initialize Keyboard Shortcuts
+                    this.setupKeyboardShortcuts();
                 }, 100);
             }
             
@@ -2483,6 +2796,596 @@
                 }
                 
                 this.render();
+            }
+            
+            // ========== SMART QUICK-ADD SYSTEM ==========
+            
+            setupQuickAdd() {
+                const quickInput = document.getElementById('quickAddInput');
+                if (!quickInput) return;
+                
+                // Enter key to create task
+                quickInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        this.parseAndCreateTask(quickInput.value);
+                    }
+                });
+                
+                // Tab key for detailed form
+                quickInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Tab' && quickInput.value.trim()) {
+                        e.preventDefault();
+                        this.openDetailedForm(quickInput.value);
+                    }
+                });
+            }
+            
+            parseAndCreateTask(input) {
+                if (!input.trim()) return;
+                
+                const parsed = this.smartParse(input);
+                
+                // Create task with parsed data
+                const task = {
+                    id: Date.now(),
+                    title: parsed.title,
+                    building: parsed.building || 'Allgemein',
+                    priority: parsed.priority || 'mittel',
+                    deadline: parsed.deadline || this.getDefaultDeadline(),
+                    budget: parsed.budget || 0,
+                    contractor: parsed.contractor || '',
+                    description: parsed.description || '',
+                    recurrence: parsed.recurrence || '',
+                    completed: false,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString(),
+                    tags: parsed.tags || []
+                };
+                
+                this.state.tasks.push(task);
+                this.saveData();
+                this.render();
+                
+                // Clear input and show success
+                document.getElementById('quickAddInput').value = '';
+                this.showNotification(`✅ Aufgabe "${task.title}" erstellt`, 'success');
+                
+                // If on different view, switch to tasks
+                if (this.state.currentView !== 'tasks') {
+                    this.switchView('tasks');
+                }
+            }
+            
+            smartParse(input) {
+                const result = {
+                    title: '',
+                    building: null,
+                    priority: null,
+                    deadline: null,
+                    contractor: null,
+                    tags: [],
+                    budget: 0,
+                    recurrence: null
+                };
+                
+                // Extract @mentions for contractors
+                const contractorMatch = input.match(/@(\w+)/);
+                if (contractorMatch) {
+                    const contractorName = contractorMatch[1];
+                    const contractor = this.state.contractors.find(c => 
+                        c.name.toLowerCase().includes(contractorName.toLowerCase())
+                    );
+                    if (contractor) {
+                        result.contractor = contractor.id;
+                        input = input.replace(contractorMatch[0], '');
+                    }
+                }
+                
+                // Extract #tags
+                const tagMatches = input.match(/#(\w+)/g);
+                if (tagMatches) {
+                    result.tags = tagMatches.map(tag => tag.substring(1));
+                    tagMatches.forEach(tag => {
+                        input = input.replace(tag, '');
+                    });
+                }
+                
+                // Extract priority (!, !!, high, hoch, mittel, niedrig)
+                if (input.includes('!!') || input.includes('dringend')) {
+                    result.priority = 'hoch';
+                    input = input.replace(/!!/g, '').replace(/dringend/gi, '');
+                } else if (input.includes('!') || /\bhoch\b/i.test(input)) {
+                    result.priority = 'hoch';
+                    input = input.replace(/!/g, '').replace(/\bhoch\b/gi, '');
+                } else if (/\bmittel\b/i.test(input)) {
+                    result.priority = 'mittel';
+                    input = input.replace(/\bmittel\b/gi, '');
+                } else if (/\bniedrig\b/i.test(input)) {
+                    result.priority = 'niedrig';
+                    input = input.replace(/\bniedrig\b/gi, '');
+                }
+                
+                // Extract building codes
+                const buildings = [...new Set(this.state.tasks.map(t => t.building))];
+                buildings.push('KDW17', 'EC450', 'S28', 'Rathaus'); // Common buildings
+                
+                for (const building of buildings) {
+                    const regex = new RegExp(`\\b${building}\\b`, 'i');
+                    if (regex.test(input)) {
+                        result.building = building;
+                        input = input.replace(regex, '');
+                        break;
+                    }
+                }
+                
+                // Extract dates (morgen, übermorgen, montag, etc.)
+                const datePatterns = {
+                    'heute': 0,
+                    'morgen': 1,
+                    'übermorgen': 2,
+                    'montag': 'monday',
+                    'dienstag': 'tuesday',
+                    'mittwoch': 'wednesday',
+                    'donnerstag': 'thursday',
+                    'freitag': 'friday',
+                    'samstag': 'saturday',
+                    'sonntag': 'sunday',
+                    'nächste woche': 7,
+                    'nächsten monat': 30
+                };
+                
+                for (const [pattern, value] of Object.entries(datePatterns)) {
+                    const regex = new RegExp(`\\b${pattern}\\b`, 'i');
+                    if (regex.test(input)) {
+                        if (typeof value === 'number') {
+                            const date = new Date();
+                            date.setDate(date.getDate() + value);
+                            result.deadline = date.toISOString().split('T')[0];
+                        } else {
+                            result.deadline = this.getNextWeekday(value);
+                        }
+                        input = input.replace(regex, '');
+                        break;
+                    }
+                }
+                
+                // Extract recurrence patterns
+                const recurrencePatterns = {
+                    'täglich': 'daily',
+                    'wöchentlich': 'weekly',
+                    'monatlich': 'monthly',
+                    'jährlich': 'yearly',
+                    '8 wochen': '8weeks',
+                    '16 wochen': '16weeks'
+                };
+                
+                for (const [pattern, value] of Object.entries(recurrencePatterns)) {
+                    const regex = new RegExp(`\\b${pattern}\\b`, 'i');
+                    if (regex.test(input)) {
+                        result.recurrence = value;
+                        input = input.replace(regex, '');
+                        break;
+                    }
+                }
+                
+                // Extract budget (number followed by € or EUR)
+                const budgetMatch = input.match(/(\d+(?:\.\d{2})?)\s*(?:€|EUR)/i);
+                if (budgetMatch) {
+                    result.budget = parseFloat(budgetMatch[1]);
+                    input = input.replace(budgetMatch[0], '');
+                }
+                
+                // Clean up and use remaining text as title
+                result.title = input.trim().replace(/\s+/g, ' ');
+                
+                return result;
+            }
+            
+            getNextWeekday(weekday) {
+                const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+                const today = new Date();
+                const todayDay = today.getDay();
+                const targetDay = days.indexOf(weekday);
+                
+                let daysToAdd = targetDay - todayDay;
+                if (daysToAdd <= 0) daysToAdd += 7;
+                
+                const targetDate = new Date(today);
+                targetDate.setDate(today.getDate() + daysToAdd);
+                return targetDate.toISOString().split('T')[0];
+            }
+            
+            getDefaultDeadline() {
+                const date = new Date();
+                date.setDate(date.getDate() + 7); // Default: 1 week from now
+                return date.toISOString().split('T')[0];
+            }
+            
+            openDetailedForm(prefillText) {
+                const parsed = this.smartParse(prefillText);
+                
+                // Prefill form fields
+                document.getElementById('taskTitle').value = parsed.title;
+                document.getElementById('taskBuilding').value = parsed.building || '';
+                document.getElementById('taskPriority').value = parsed.priority || 'mittel';
+                document.getElementById('taskDeadline').value = parsed.deadline || '';
+                document.getElementById('taskBudget').value = parsed.budget || '';
+                document.getElementById('taskContractor').value = parsed.contractor || '';
+                document.getElementById('taskRecurrence').value = parsed.recurrence || '';
+                
+                // Open modal
+                this.showModal('taskModal');
+                
+                // Clear quick add input
+                document.getElementById('quickAddInput').value = '';
+            }
+            
+            setQuickAddExample(example) {
+                const input = document.getElementById('quickAddInput');
+                input.value = example;
+                input.focus();
+                input.select();
+            }
+            
+            // ========== KEYBOARD SHORTCUTS ==========
+            
+            setupKeyboardShortcuts() {
+                document.addEventListener('keydown', (e) => {
+                    // Ignore if typing in input/textarea
+                    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                        // Except for ESC key
+                        if (e.key === 'Escape') {
+                            e.target.blur();
+                            this.closeAllModals();
+                        }
+                        return;
+                    }
+                    
+                    // "/" to focus quick add
+                    if (e.key === '/') {
+                        e.preventDefault();
+                        document.getElementById('quickAddInput').focus();
+                    }
+                    
+                    // "n" for new task
+                    else if (e.key === 'n') {
+                        e.preventDefault();
+                        this.showModal('taskModal');
+                    }
+                    
+                    // "p" for new project
+                    else if (e.key === 'p') {
+                        e.preventDefault();
+                        this.showModal('projectModal');
+                    }
+                    
+                    // "?" for help
+                    else if (e.key === '?' && e.shiftKey) {
+                        e.preventDefault();
+                        this.showShortcuts();
+                    }
+                    
+                    // Cmd/Ctrl + K for command palette
+                    else if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
+                        e.preventDefault();
+                        this.showCommandPalette();
+                    }
+                    
+                    // Number keys 1-6 for view switching
+                    else if (e.key >= '1' && e.key <= '6') {
+                        const views = ['tasks', 'kanban', 'projects', 'budget', 'wiki', 'notes'];
+                        const viewIndex = parseInt(e.key) - 1;
+                        if (views[viewIndex]) {
+                            this.switchView(views[viewIndex]);
+                        }
+                    }
+                    
+                    // ESC to close modals
+                    else if (e.key === 'Escape') {
+                        this.closeAllModals();
+                    }
+                });
+            }
+            
+            showShortcuts() {
+                document.getElementById('shortcutsModal').classList.add('show');
+            }
+            
+            hideShortcuts() {
+                document.getElementById('shortcutsModal').classList.remove('show');
+            }
+            
+            showCommandPalette() {
+                const palette = document.getElementById('commandPalette');
+                const input = document.getElementById('commandInput');
+                const results = document.getElementById('commandResults');
+                
+                palette.classList.add('show');
+                input.value = '';
+                input.focus();
+                
+                // Setup command search
+                input.oninput = () => {
+                    const query = input.value.toLowerCase();
+                    const commands = this.getAvailableCommands();
+                    
+                    const filtered = commands.filter(cmd => 
+                        cmd.text.toLowerCase().includes(query) ||
+                        cmd.keywords.some(k => k.includes(query))
+                    );
+                    
+                    results.innerHTML = filtered.map((cmd, i) => `
+                        <div class="command-item ${i === 0 ? 'selected' : ''}" 
+                             data-action="${cmd.action}"
+                             onclick="app.executeCommand('${cmd.action}')">
+                            <span class="command-icon">${cmd.icon}</span>
+                            <span class="command-text">${cmd.text}</span>
+                            ${cmd.shortcut ? `<span class="command-shortcut">${cmd.shortcut}</span>` : ''}
+                        </div>
+                    `).join('');
+                };
+                
+                // Initial render
+                input.oninput();
+                
+                // Keyboard navigation
+                input.onkeydown = (e) => {
+                    const items = results.querySelectorAll('.command-item');
+                    const selected = results.querySelector('.command-item.selected');
+                    let index = Array.from(items).indexOf(selected);
+                    
+                    if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        if (index < items.length - 1) index++;
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        if (index > 0) index--;
+                    } else if (e.key === 'Enter') {
+                        e.preventDefault();
+                        if (selected) {
+                            this.executeCommand(selected.dataset.action);
+                        }
+                    } else if (e.key === 'Escape') {
+                        this.hideCommandPalette();
+                    }
+                    
+                    items.forEach((item, i) => {
+                        item.classList.toggle('selected', i === index);
+                    });
+                };
+            }
+            
+            hideCommandPalette() {
+                document.getElementById('commandPalette').classList.remove('show');
+            }
+            
+            getAvailableCommands() {
+                return [
+                    { icon: '📋', text: 'Neue Aufgabe', action: 'new-task', shortcut: 'n', keywords: ['task', 'aufgabe', 'todo'] },
+                    { icon: '🏗️', text: 'Neues Projekt', action: 'new-project', shortcut: 'p', keywords: ['project', 'projekt'] },
+                    { icon: '👷', text: 'Neuer Dienstleister', action: 'new-contractor', keywords: ['contractor', 'dienstleister'] },
+                    { icon: '📝', text: 'Neue Notiz', action: 'new-note', keywords: ['note', 'notiz'] },
+                    { icon: '📊', text: 'Kanban-Ansicht', action: 'view-kanban', shortcut: '2', keywords: ['kanban', 'board'] },
+                    { icon: '💰', text: 'Budget-Übersicht', action: 'view-budget', shortcut: '4', keywords: ['budget', 'kosten'] },
+                    { icon: '📚', text: 'Wiki öffnen', action: 'view-wiki', shortcut: '5', keywords: ['wiki', 'hilfe'] },
+                    { icon: '💾', text: 'Daten exportieren', action: 'export', keywords: ['export', 'backup'] },
+                    { icon: '🔄', text: 'Daten synchronisieren', action: 'sync', keywords: ['sync', 'synchronisieren'] },
+                    { icon: '⚙️', text: 'Einstellungen', action: 'settings', keywords: ['settings', 'einstellungen'] },
+                    { icon: '🔍', text: 'Suchen', action: 'search', shortcut: '⌘F', keywords: ['search', 'suche', 'find'] }
+                ];
+            }
+            
+            executeCommand(action) {
+                this.hideCommandPalette();
+                
+                switch (action) {
+                    case 'new-task':
+                        this.showModal('taskModal');
+                        break;
+                    case 'new-project':
+                        this.showModal('projectModal');
+                        break;
+                    case 'new-contractor':
+                        this.showModal('contractorModal');
+                        break;
+                    case 'new-note':
+                        this.showModal('noteModal');
+                        break;
+                    case 'view-kanban':
+                        this.switchView('kanban');
+                        break;
+                    case 'view-budget':
+                        this.switchView('budget');
+                        break;
+                    case 'view-wiki':
+                        this.switchView('wiki');
+                        break;
+                    case 'export':
+                        this.exportData();
+                        break;
+                    case 'sync':
+                        if (this.syncManager) {
+                            this.syncManager.syncAll();
+                        }
+                        break;
+                    case 'settings':
+                        this.showSettings();
+                        break;
+                    case 'search':
+                        // Focus on appropriate search field based on current view
+                        const searchInput = document.querySelector(`#${this.state.currentView}View input[type="search"]`);
+                        if (searchInput) searchInput.focus();
+                        break;
+                }
+            }
+            
+            closeAllModals() {
+                document.querySelectorAll('.form-modal, .shortcuts-modal, .command-palette').forEach(modal => {
+                    modal.classList.remove('show');
+                });
+            }
+            
+            showSettings() {
+                // Create settings modal if not exists
+                if (!document.getElementById('settingsModal')) {
+                    this.createSettingsModal();
+                }
+                this.showModal('settingsModal');
+            }
+            
+            createSettingsModal() {
+                const modal = document.createElement('div');
+                modal.id = 'settingsModal';
+                modal.className = 'form-modal';
+                modal.innerHTML = `
+                    <div class="form-content">
+                        <div class="form-header">
+                            <h2>⚙️ Einstellungen</h2>
+                            <button class="close-btn" onclick="app.hideModal('settingsModal')">&times;</button>
+                        </div>
+                        <div class="settings-content">
+                            <h3>Supabase Konfiguration</h3>
+                            <p style="font-size: 14px; color: #666; margin-bottom: 20px;">
+                                Für die Synchronisation zwischen Geräten benötigen Sie Supabase Credentials.
+                                Diese werden lokal in Ihrem Browser gespeichert.
+                            </p>
+                            
+                            <div class="form-group">
+                                <label for="settingsSupabaseUrl">Supabase URL</label>
+                                <input type="text" id="settingsSupabaseUrl" 
+                                       placeholder="https://xxxxx.supabase.co"
+                                       value="${localStorage.getItem('custom_supabase_url') || ''}"
+                                />
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="settingsSupabaseKey">Anon Key</label>
+                                <input type="password" id="settingsSupabaseKey" 
+                                       placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                                       value="${localStorage.getItem('custom_supabase_key') || ''}"
+                                />
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" id="settingsShowKey" 
+                                           onchange="document.getElementById('settingsSupabaseKey').type = this.checked ? 'text' : 'password'">
+                                    Key anzeigen
+                                </label>
+                            </div>
+                            
+                            <div style="margin-top: 20px; padding: 15px; background: #f0f8ff; border-radius: 8px;">
+                                <h4 style="margin: 0 0 10px 0; font-size: 16px;">📝 Anleitung:</h4>
+                                <ol style="margin: 0; padding-left: 20px; font-size: 14px;">
+                                    <li>Erstellen Sie ein kostenloses Konto bei <a href="https://supabase.com" target="_blank">supabase.com</a></li>
+                                    <li>Erstellen Sie ein neues Projekt</li>
+                                    <li>Kopieren Sie die URL aus: Settings → API → Project URL</li>
+                                    <li>Kopieren Sie den anon key aus: Settings → API → anon public</li>
+                                </ol>
+                            </div>
+                            
+                            <div class="button-group" style="margin-top: 20px;">
+                                <button onclick="app.saveSettings()" class="primary-btn">
+                                    💾 Speichern & Neu laden
+                                </button>
+                                <button onclick="app.testSupabaseConnection()" class="secondary-btn">
+                                    🔌 Verbindung testen
+                                </button>
+                            </div>
+                            
+                            <div id="settingsMessage" style="margin-top: 20px; padding: 10px; border-radius: 8px; display: none;"></div>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            }
+            
+            saveSettings() {
+                const url = document.getElementById('settingsSupabaseUrl').value.trim();
+                const key = document.getElementById('settingsSupabaseKey').value.trim();
+                
+                if (url && key) {
+                    // Save to localStorage
+                    localStorage.setItem('custom_supabase_url', url);
+                    localStorage.setItem('custom_supabase_key', key);
+                    
+                    // Show success message
+                    this.showSettingsMessage('✅ Einstellungen gespeichert! Seite wird neu geladen...', 'success');
+                    
+                    // Reload after 2 seconds to apply new settings
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+                } else {
+                    this.showSettingsMessage('❌ Bitte beide Felder ausfüllen', 'error');
+                }
+            }
+            
+            testSupabaseConnection() {
+                const url = document.getElementById('settingsSupabaseUrl').value.trim();
+                const key = document.getElementById('settingsSupabaseKey').value.trim();
+                
+                if (!url || !key) {
+                    this.showSettingsMessage('❌ Bitte beide Felder ausfüllen', 'error');
+                    return;
+                }
+                
+                this.showSettingsMessage('🔄 Teste Verbindung...', 'info');
+                
+                // Try to create a test client
+                try {
+                    if (window.supabase) {
+                        const testClient = window.supabase.createClient(url, key);
+                        
+                        // Try a simple query
+                        testClient.from('tasks').select('count').single()
+                            .then(({ data, error }) => {
+                                if (error && error.code !== 'PGRST116') { // PGRST116 = no rows, which is fine
+                                    this.showSettingsMessage('❌ Verbindung fehlgeschlagen: ' + error.message, 'error');
+                                } else {
+                                    this.showSettingsMessage('✅ Verbindung erfolgreich!', 'success');
+                                }
+                            })
+                            .catch(err => {
+                                this.showSettingsMessage('❌ Verbindung fehlgeschlagen: ' + err.message, 'error');
+                            });
+                    } else {
+                        this.showSettingsMessage('❌ Supabase Library nicht geladen', 'error');
+                    }
+                } catch (err) {
+                    this.showSettingsMessage('❌ Fehler: ' + err.message, 'error');
+                }
+            }
+            
+            showSettingsMessage(message, type) {
+                const msgEl = document.getElementById('settingsMessage');
+                msgEl.textContent = message;
+                msgEl.style.display = 'block';
+                msgEl.style.background = type === 'success' ? '#d4edda' : type === 'error' ? '#f8d7da' : '#d1ecf1';
+                msgEl.style.color = type === 'success' ? '#155724' : type === 'error' ? '#721c24' : '#0c5460';
+            }
+            
+            checkSupabaseSetup() {
+                // Check if Supabase is configured
+                const hasCustomCreds = localStorage.getItem('custom_supabase_url') && localStorage.getItem('custom_supabase_key');
+                const hasEnvCreds = window.SUPABASE_URL && window.SUPABASE_ANON_KEY;
+                const isFirstVisit = !localStorage.getItem('supabase_setup_completed');
+                
+                if (!hasCustomCreds && !hasEnvCreds && isFirstVisit) {
+                    // Show welcome message
+                    setTimeout(() => {
+                        if (confirm('👋 Willkommen beim Property Manager!\n\nMöchten Sie die Synchronisation zwischen Geräten einrichten?\n\n(Sie können dies auch später unter Einstellungen tun)')) {
+                            this.showSettings();
+                        } else {
+                            // Mark as completed so we don't ask again
+                            localStorage.setItem('supabase_setup_completed', 'skipped');
+                        }
+                    }, 2000);
+                } else if (hasCustomCreds || hasEnvCreds) {
+                    // Mark as completed if credentials exist
+                    localStorage.setItem('supabase_setup_completed', 'true');
+                }
             }
             
             setFilter(filter) {
@@ -3875,6 +4778,11 @@
                             window.app.syncManager.updateSyncStatus('offline');
                         }
                     });
+                }
+                
+                // Check if we need to prompt for Supabase setup
+                if (window.app) {
+                    window.app.checkSupabaseSetup();
                 }
             }, 1000);
         });

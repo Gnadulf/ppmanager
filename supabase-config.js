@@ -7,11 +7,25 @@ let SUPABASE_CONFIG = {
 
 // Function to check and update config
 function updateSupabaseConfig() {
+    // First check localStorage for custom credentials
+    const customUrl = localStorage.getItem('custom_supabase_url');
+    const customKey = localStorage.getItem('custom_supabase_key');
+    
+    if (customUrl && customKey) {
+        SUPABASE_CONFIG.url = customUrl;
+        SUPABASE_CONFIG.anonKey = customKey;
+        debugLog('Using custom Supabase credentials from localStorage');
+        return true;
+    }
+    
+    // Fallback to environment variables
     if (window.SUPABASE_URL && window.SUPABASE_ANON_KEY) {
         SUPABASE_CONFIG.url = window.SUPABASE_URL;
         SUPABASE_CONFIG.anonKey = window.SUPABASE_ANON_KEY;
+        debugLog('Using Supabase credentials from environment');
         return true;
     }
+    
     return false;
 }
 
