@@ -19,7 +19,7 @@ function updateSupabaseConfig() {
 let supabase = null;
 
 // Debug: Log configuration status
-console.log('🔍 Supabase Debug Info:', {
+debugLog('🔍 Supabase Debug Info:', {
     windowURL: window.SUPABASE_URL,
     windowKey: window.SUPABASE_ANON_KEY ? 'Key exists' : 'No key',
     configURL: SUPABASE_CONFIG.url,
@@ -40,10 +40,10 @@ function initializeSupabaseClient() {
                     autoRefreshToken: true
                 }
             });
-            console.log('✅ Supabase client initialized successfully');
+            debugLog('✅ Supabase client initialized successfully');
             return true;
         } catch (error) {
-            console.error('Failed to initialize Supabase:', error);
+            debugError('Failed to initialize Supabase:', error);
             return false;
         }
     }
@@ -76,11 +76,11 @@ class SyncManager {
         updateSupabaseConfig();
         
         if (initializeSupabaseClient() && supabase) {
-            console.log('✅ SyncManager: Supabase ready, initializing sync');
+            debugLog('✅ SyncManager: Supabase ready, initializing sync');
             this.initializeSync();
         } else if (this.retryCount < this.maxRetries) {
             this.retryCount++;
-            console.log(`⏳ SyncManager: Waiting for credentials (attempt ${this.retryCount}/${this.maxRetries})`);
+            debugLog(`⏳ SyncManager: Waiting for credentials (attempt ${this.retryCount}/${this.maxRetries})`);
             this.updateSyncStatus('offline');
             
             // Retry with exponential backoff
@@ -91,7 +91,7 @@ class SyncManager {
             // Increase delay for next retry (max 10 seconds)
             this.retryDelay = Math.min(this.retryDelay * 1.5, 10000);
         } else {
-            console.warn('❌ SyncManager: Max retries reached. Running in offline mode.');
+            debugLog('❌ SyncManager: Max retries reached. Running in offline mode.');}
             this.updateSyncStatus('offline');
         }
     }
